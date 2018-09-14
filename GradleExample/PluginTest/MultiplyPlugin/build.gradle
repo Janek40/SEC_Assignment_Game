@@ -1,0 +1,12 @@
+apply plugin: 'java'
+sourceCompatibility = '1.8'
+
+jar {
+    manifest {
+        attributes 'Plugin-Class': 'MultiplyPlugin'
+    }
+}
+
+dependencies {
+    compile project(':core')
+}
