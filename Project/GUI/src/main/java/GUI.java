@@ -5,6 +5,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.scene.control.ListView;
+import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
 
 public class GUI extends Application
 {
@@ -37,6 +40,14 @@ public class GUI extends Application
 	//add this button to the stack pane
 	root.getChildren().add(btn);
 	
+        ListView<String> list = new ListView<String>();
+	ObservableList<String> items = FXCollections.observableArrayList (
+	    "Single", "Double", "Suite", "Family App");
+	list.setItems(items);
+	root.getChildren().add(list);
+
+
+
 	//set the window size and root stack pane
 	primaryStage.setScene(new Scene(root, 300, 250));
 	
