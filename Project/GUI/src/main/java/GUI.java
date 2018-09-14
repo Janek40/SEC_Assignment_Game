@@ -16,7 +16,10 @@ public class GUI extends Application
     @Override
     public void start(Stage primaryStage)
     {
-        primaryStage.setTitle("Hello world!");
+        //Set the window's title
+	primaryStage.setTitle("Hello world!");
+	
+	//set up a button
 	Button btn = new Button();
 	btn.setText("Say herro there");
 	btn.setOnAction(new EventHandler<ActionEvent>()
@@ -28,9 +31,16 @@ public class GUI extends Application
 	    }
 	});
 	
+	//add a stack pane
 	StackPane root = new StackPane();
+
+	//add this button to the stack pane
 	root.getChildren().add(btn);
+	
+	//set the window size and root stack pane
 	primaryStage.setScene(new Scene(root, 300, 250));
+	
+	//Show the window
 	primaryStage.show();
     }
 }
