@@ -1,1 +1,16 @@
 *.swp
+Project/.gradle/buildOutputCleanup/cache.properties
+Project/.gradle/4.10.1/taskHistory/taskHistory.bin
+Project/.gradle/4.10.1/javaCompile/javaCompile.lock
+Project/.gradle/4.10.1/fileHashes/fileHashes.lock
+Project/.gradle/4.10.1/fileHashes/fileHashes.bin
+Project/.gradle/4.10.1/fileChanges/last-build.bin
+Project/GUI/build/tmp/jar/MANIFEST.MF
+Project/.gradle/buildOutputCleanup/outputFiles.bin
+Project/.gradle/4.10.1/taskHistory/taskHistory.lock
+Project/.gradle/4.10.1/javaCompile/taskHistory.bin
+Project/.gradle/4.10.1/fileContent/fileContent.lock
+Project/.gradle/vcs-1/gc.properties
+Project/.gradle/4.10.1/gc.properties
+Project/.gradle/buildOutputCleanup/buildOutputCleanup.lock
+Project/GUI/build/classes/java/main/GUI$1.class
