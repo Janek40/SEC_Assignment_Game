@@ -22,6 +22,17 @@ public class GUI extends Application
         //Set the window's title
 	primaryStage.setTitle("Hello world!");
 	
+	//add a stack pane
+	StackPane root = new StackPane();
+
+        
+	ListView<String> list = new ListView<String>();
+	ObservableList<String> items = FXCollections.observableArrayList (
+	    "Single", "Double", "Suite", "Family App");
+	list.setItems(items);
+	root.getChildren().add(list);
+
+
 	//set up a button
 	Button btn = new Button();
 	btn.setText("Say herro there");
@@ -30,21 +41,11 @@ public class GUI extends Application
 	    @Override
 	    public void handle(ActionEvent event)
 	    {
-	        System.out.println("Hello world!");
+		System.out.println(list.getSelectionModel().getSelectedIndex());
 	    }
 	});
-	
-	//add a stack pane
-	StackPane root = new StackPane();
-
 	//add this button to the stack pane
 	root.getChildren().add(btn);
-	
-        ListView<String> list = new ListView<String>();
-	ObservableList<String> items = FXCollections.observableArrayList (
-	    "Single", "Double", "Suite", "Family App");
-	list.setItems(items);
-	root.getChildren().add(list);
 
 
 
