@@ -9,6 +9,15 @@ allprojects
 
 jar {
     manifest {
-        attributes 'Main-Class': ''
+        attributes 'Main-Class': 'Mainf'
     }
+    
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}
+}
+
+
+
+dependencies {
+    compile project(":GUI");
+    compile project(":PluginFinder");
 }
