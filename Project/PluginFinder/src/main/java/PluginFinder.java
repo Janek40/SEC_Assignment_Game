@@ -10,7 +10,8 @@ public class PluginFinder
 {
     private List<String> searchLocations;
     private List<String> mustContain;
-    private List<String> files = new LinkedList<String>();
+    private List<String> fileNames = new LinkedList<String>();
+    private List<String> locations = new LinkedList<String>();
 
     public PluginFinder(List<String> searchLocations, List<String> mustContain)
     {
@@ -18,9 +19,14 @@ public class PluginFinder
 	this.mustContain = mustContain;
     }
 
-    public List<String> getFiles()
+    public List<String> getfileNames()
     {
-        return files;
+        return fileNames;
+    }
+
+    public List<String> getLocations()
+    {
+        return locations;
     }
     
     /*
@@ -43,20 +49,22 @@ public class PluginFinder
 	    {
 	        paths.filter(Files::isRegularFile).forEach( filePath -> 
 		{
-		    String myFile = filePath.toString();
-		    boolean contains = true;
+                    boolean contains = true;
+		    String fName = filePath.getFileName().toString();
 		    for(int j=0;j<mustContain.size();j++)
 		    {
 		        String curr = mustContain.get(j);
-			if(!myFile.contains(curr))
+			if(!fName.contains(curr))
 			{
 			    contains = false;
 			    break;
 			}
 		    }
+		    
 		    if(contains)
 		    {
-		        files.add(filePath.toString());
+		        fileNames.add(filePath.getFileName().toString());
+			locations.add(filePath.toString());
 		    }
 		});
 	    }
@@ -68,23 +76,5 @@ public class PluginFinder
     }
 
 
-    @Override
-    //O(n^2)
-    public String toString()
-    {
-        String ans="";
-	int length = files.size();
-	for(int i=0;i<length;i++)
-	{
-	    if(i==0)
-	    {
-	        ans = ans + files.get(i);
-	    }
-	    else
-	    {
-	        ans = ans + '\n' + files.get(i);
-	    }
-	}
-	return ans;
-    }
+
 }
