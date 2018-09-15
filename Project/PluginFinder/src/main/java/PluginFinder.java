@@ -41,9 +41,9 @@ public class PluginFinder
 	    String directory = searchLocations.get(i);
 	    try (Stream<Path> paths = Files.walk(Paths.get(directory)))
 	    {
-	        paths.filter(Files::isRegularFile).forEach( file -> 
+	        paths.filter(Files::isRegularFile).forEach( filePath -> 
 		{
-		    String myFile = file.toString();
+		    String myFile = filePath.toString();
 		    boolean contains = true;
 		    for(int j=0;j<mustContain.size();j++)
 		    {
@@ -56,7 +56,7 @@ public class PluginFinder
 		    }
 		    if(contains)
 		    {
-		        files.add(file.toString());
+		        files.add(filePath.toString());
 		    }
 		});
 	    }
