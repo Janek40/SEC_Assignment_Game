@@ -3,3 +3,7 @@ jar {
         attributes 'Main-Class': 'GUI'
     }
 }
+
+dependencies {
+    compile project(":PluginFinder");
+}

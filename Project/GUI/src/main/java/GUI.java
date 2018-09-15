@@ -9,11 +9,13 @@ import javafx.scene.control.ListView;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 
+
 public class GUI extends Application
 {
     public static void main(String[] args)
     {
         launch(args);
+	PluginFinder pf;
     }
 
     @Override

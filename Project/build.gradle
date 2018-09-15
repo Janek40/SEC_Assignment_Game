@@ -1,4 +1,14 @@
-subprojects
+allprojects
 {
     apply plugin: 'java'
+
+    repositories {
+        jcenter()
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': ''
+    }
 }
