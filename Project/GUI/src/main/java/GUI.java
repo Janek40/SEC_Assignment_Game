@@ -9,19 +9,39 @@ import javafx.scene.control.ListView;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 public class GUI extends Application
 {
-    public static void main(String[] args)
+    /*public static void main(String[] args)
     {
         launch(args);
-	PluginFinder pf;
-    }
+    }*/
+
 
     @Override
     public void start(Stage primaryStage)
     {
-        //Set the window's title
+        List<String> places = new ArrayList<String>(10);
+	places.add("plugins/");
+	List<String> contains = new ArrayList<String>(10);
+	contains.add("Plugin");
+	contains.add(".class");
+	PluginFinder pf = new PluginFinder(places, contains);
+	try
+	{
+	    pf.find();
+	}
+	catch(IOException e)
+	{
+	    System.out.println(e);
+	    return;
+	}
+	
+	
+	//Set the window's title
 	primaryStage.setTitle("Hello world!");
 	
 	//add a stack pane
@@ -29,8 +49,9 @@ public class GUI extends Application
 
         
 	ListView<String> list = new ListView<String>();
-	ObservableList<String> items = FXCollections.observableArrayList (
-	    "Single", "Double", "Suite", "Family App");
+	ObservableList<String> items = FXCollections.observableList(pf.getFiles());
+	//ObservableList<String> items = FXCollections.observableArrayList (
+	 //   "Single", "Double", "Suite", "Family App");
 	list.setItems(items);
 	root.getChildren().add(list);
 

@@ -17,6 +17,11 @@ public class PluginFinder
 	this.searchLocations = searchLocations;
 	this.mustContain = mustContain;
     }
+
+    public List<String> getFiles()
+    {
+        return files;
+    }
     
     /*
         Function iterates through a set of directories recursively (via walk())

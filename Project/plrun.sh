@@ -1,2 +1,3 @@
 #!/bin/bash
-java -jar PluginFinder/build/libs/PluginFinder.jar
+gradle build
+java -jar build/libs/janeks-TextGame.jar
