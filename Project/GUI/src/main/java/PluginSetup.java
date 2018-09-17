@@ -14,8 +14,10 @@ public class PluginSetup
     private GridPane root;
     private boolean added = false;
     private boolean inError = false;
-
-    private PluginFinder pf;
+    
+    private volatile Object key = new Object();
+    private volatile PluginFinder pf;
+    private volatile boolean loaded = false;
 
     public PluginSetup(GridPane root)
     {
@@ -26,44 +28,68 @@ public class PluginSetup
 	updateList(loadingList);
     }
 
-    public void updatePluginsList() throws IOException
+    public void updatePluginsList()
     {
-        List<String> places = new ArrayList<String>(1);
-	places.add(System.getProperty("user.dir") + "/plugins/");
-	List<String> contains = new ArrayList<String>(2);
-	contains.add("Plugin");
-	contains.add(".class");
-	pf = new PluginFinder(places, contains);
-        try
+        Thread t1 = new Thread(() ->
 	{
-	    pf.find();
-	}
-	catch(IOException e)
-	{
-	    updateWithError("Unable to load plugins");
-	    throw new IOException("Unable to load plugins", e);
-	}
+	    List<String> places = new ArrayList<String>(1);
+	    places.add(System.getProperty("user.dir") + "/plugins/");
+	    List<String> contains = new ArrayList<String>(2);
+	    contains.add("Plugin");
+	    contains.add(".class");
+	    pf = new PluginFinder(places, contains);
+	
+	    try
+	    {
+	        pf.find();
+	    }
+	    catch(IOException e)
+	    {
+	        updateWithError("Unable to load plugins");
+	        System.out.println("Unable to load plugins");
+	    }
         
-	//No plugins
-	if(pf.getfileNames().size()==0)
-	{
-	   updateWithError("There are no plugins in plugins/ folder");
-	   throw new IOException("No plugins");
-	}
+	    //No plugins
+	    if(pf.getfileNames().size()==0)
+	    {
+	       updateWithError("There are no plugins in plugins/ folder");
+	       System.out.println("No plugins");
+	    }
+            //try{Thread.sleep(5000);}catch(InterruptedException e){}
+        
+            synchronized(key)
+	    {
+	        loaded = true;
+	        inError = false;
+	    }
 
-	updateList(pf.removeExtension(6));
+	    updateList(pf.removeExtension(6));
+	});
+	t1.start();
     }
     
     public ListView<String> getList()
     {
-        return this.list;
+        //if they are still being loaded
+	//or the plugins could not be found
+	synchronized(key)
+	{
+	    if(!loaded || inError)
+	    {
+                return null;
+	    }
+	}
+	return this.list;
     }
 
-    public PluginFinder getOriginalFinder() throws IOException
+    public PluginFinder getOriginalFinder()
     {
-        if(inError)
+        synchronized(key)
 	{
-	    throw new IOException("Plugins have not been located!");
+	    if(!loaded || inError)
+	    {
+                return null;
+	    }
 	}
         return pf;
     }
@@ -93,7 +119,10 @@ public class PluginSetup
     
     private void updateWithError(String error)
     {
-        this.inError = true;
+        synchronized(key)
+	{
+	    this.inError = true;
+	}
 	List<String> errorList = new ArrayList<String>();
 	errorList.add(error);
 	updateList(errorList);
