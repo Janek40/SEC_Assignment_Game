@@ -1,9 +1,13 @@
 jar {
     manifest {
-        attributes 'Main-Class': 'GUI'
+        attributes 'Plugin-Class': 'GUI'
     }
 }
 
 dependencies {
+    compile project(":QuestionTypes:QuestionType");
+    compile project(":QuestionTypes:ShortAnswer");
+    compile project(":QuestionTypes:MultiChoice");
+    
     compile project(":PluginFinder");
 }
