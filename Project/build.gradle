@@ -19,5 +19,4 @@ jar {
 
 dependencies {
     compile project(":GUI");
-    compile project(":PluginFinder");
 }
