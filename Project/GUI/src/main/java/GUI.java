@@ -29,7 +29,9 @@ public class GUI extends Application
     {
 	//Set the window's title
 	primaryStage.setTitle("Hello world!");
-	
+
+	QuestionType q = new MultiChoicePlugin();
+	q.test();
 	//add a stack pane
 	//StackPane root = new StackPane();
         GridPane root = new GridPane();
