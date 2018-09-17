@@ -1,0 +1,9 @@
+jar {
+    manifest {
+            attributes 'Plugin-Class': 'ShortAnswerPlugin'
+    }
+}
+
+dependencies{
+    compile project(":QuestionTypes:QuestionType")
+}

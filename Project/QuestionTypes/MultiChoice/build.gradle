@@ -1,0 +1,9 @@
+jar {
+    manifest {
+            attributes 'Plugin-Class': 'MultiChoicePlugin'
+    }
+}
+
+dependencies{
+    compile project(":QuestionTypes:QuestionType")
+}
