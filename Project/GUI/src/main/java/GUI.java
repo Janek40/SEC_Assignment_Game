@@ -10,6 +10,8 @@ import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.application.Platform;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.geometry.Insets;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,6 +19,11 @@ import java.util.ArrayList;
 
 public class GUI extends Application
 {
+    private final int WINDOW_X = 300;
+    private final int WINDOW_Y = 200;
+    private final int PLUGIN_LIST_X = 130;
+    private final int PLUGIN_LIST_Y = 150;
+
     @Override
     public void start(Stage primaryStage)
     {
@@ -26,10 +33,10 @@ public class GUI extends Application
 	//add a stack pane
 	//StackPane root = new StackPane();
         GridPane root = new GridPane();
-
+        
 	PluginSetup ps = new PluginSetup(root);
-	ps.setXY(0,0);
-	ps.setPrefWidthHeight(130, 150);
+	ps.setXY(1,0);
+	ps.setPrefWidthHeight(PLUGIN_LIST_X, PLUGIN_LIST_Y);
 	//This is run in another thread as it could be time consuming
 	ps.updatePluginsList();
 
@@ -55,10 +62,16 @@ public class GUI extends Application
 	    }
 	});
 	//add this button to the stack pane
-	root.add(btn, 0, 1);
+	root.add(btn, 1, 1);
 	
+	//centers elements
+	VBox vbox = new VBox();
+	vbox.setPadding(new Insets(0, (WINDOW_X-PLUGIN_LIST_X)/2, 0, 0));
+	root.add(vbox, 0, 0);
+
+
 	//set the window size and root stack pane
-	primaryStage.setScene(new Scene(root, 300, 250));
+	primaryStage.setScene(new Scene(root, WINDOW_X, WINDOW_Y));
 	
 	//Show the window
 	primaryStage.show();
