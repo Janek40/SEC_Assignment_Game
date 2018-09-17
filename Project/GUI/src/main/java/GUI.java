@@ -30,15 +30,12 @@ public class GUI extends Application
 	PluginSetup ps = new PluginSetup(root);
 	ps.setXY(0,0);
 	ps.setPrefWidthHeight(130, 150);
-	Thread t1 = new Thread(new Runnable()
+	Thread t1 = new Thread(() ->
 	{
-	   @Override
-	   public void run()
-	   {
 	       try
 	       {
  	           //Use this line to show the loading text...
-		   //try{Thread.sleep(1000);}catch(InterruptedException e){}
+		   try{Thread.sleep(5000);}catch(InterruptedException e){}
 
 		   ps.updatePluginsList();
 	       }
@@ -47,19 +44,30 @@ public class GUI extends Application
 	           System.out.println(e);
 		   return;
 	       }
-	   }
 	});
 	t1.start();
 
 	//set up a button
 	Button btn = new Button();
-	btn.setText("Say herro there");
+	btn.setText("Continue");
 	btn.setOnAction(new EventHandler<ActionEvent>()
 	{
 	    @Override
 	    public void handle(ActionEvent event)
 	    {
-		System.out.println(ps.getList().getSelectionModel().getSelectedIndex());
+	        int index = ps.getList().getSelectionModel().getSelectedIndex();
+		if(index!=-1)
+		{
+		    try
+		    {
+		        System.out.println("Selected: " 
+		            + ps.getOriginalFinder().getLocations().get(index));
+		    }
+		    catch(IOException e)
+		    {
+		        System.out.println(e);
+		    }
+		}
 	    }
 	});
 	//add this button to the stack pane
