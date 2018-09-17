@@ -23,3 +23,7 @@ Project/.gradle/4.10.1/javaCompile/jarAnalysis.bin
 Project/GUI/build/classes/java/main/GUI$2.class
 Project/PluginFinder/build/classes/java/main/PluginSetup$1.class
 Project/GUI/build/classes/java/main/PluginSetup$1.class
+Project/QuestionTypes/build/tmp/jar/MANIFEST.MF
+Project/QuestionTypes/MultiChoice/build/tmp/jar/MANIFEST.MF
+Project/QuestionTypes/QuestionType/build/tmp/jar/MANIFEST.MF
+Project/QuestionTypes/ShortAnswer/build/tmp/jar/MANIFEST.MF
