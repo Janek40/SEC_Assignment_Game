@@ -13,6 +13,9 @@ public class PluginSetup
     private ListView<String> list = new ListView<String>();
     private GridPane root;
     private boolean added = false;
+    private boolean inError = false;
+
+    private PluginFinder pf;
 
     public PluginSetup(GridPane root)
     {
@@ -26,18 +29,26 @@ public class PluginSetup
     public void updatePluginsList() throws IOException
     {
         List<String> places = new ArrayList<String>(1);
-	places.add("plugins/");
+	places.add(System.getProperty("user.dir") + "/plugins/");
 	List<String> contains = new ArrayList<String>(2);
 	contains.add("Plugin");
 	contains.add(".class");
-	PluginFinder pf = new PluginFinder(places, contains);
+	pf = new PluginFinder(places, contains);
         try
 	{
 	    pf.find();
 	}
 	catch(IOException e)
 	{
+	    updateWithError("Unable to load plugins");
 	    throw new IOException("Unable to load plugins", e);
+	}
+        
+	//No plugins
+	if(pf.getfileNames().size()==0)
+	{
+	   updateWithError("There are no plugins in plugins/ folder");
+	   throw new IOException("No plugins");
 	}
 
 	updateList(pf.removeExtension(6));
@@ -46,6 +57,15 @@ public class PluginSetup
     public ListView<String> getList()
     {
         return this.list;
+    }
+
+    public PluginFinder getOriginalFinder() throws IOException
+    {
+        if(inError)
+	{
+	    throw new IOException("Plugins have not been located!");
+	}
+        return pf;
     }
 
     public void setXY(int x, int y)
@@ -69,6 +89,14 @@ public class PluginSetup
     private ObservableList<String> convertToItems(List<String> inItems)
     {
         return FXCollections.observableList(inItems);
+    }
+    
+    private void updateWithError(String error)
+    {
+        this.inError = true;
+	List<String> errorList = new ArrayList<String>();
+	errorList.add(error);
+	updateList(errorList);
     }
 
     public void updateList(List<String> inItems)
