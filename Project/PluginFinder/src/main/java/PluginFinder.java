@@ -29,6 +29,25 @@ public class PluginFinder
         return locations;
     }
     
+    //Function removes 'length' number of characters off the end of each fileName
+    //entry, and returns this as a new list - leaving the original fileNames List
+    //unchanged
+    public List<String> removeExtension(int length)
+    {
+        List<String> fOnly = new LinkedList<String>();
+	for(int i=0;i<fileNames.size();i++)
+	{
+	    String temp="";
+	    String curr = fileNames.get(i);
+	    for(int j=0;j<curr.length()-length;j++)
+	    {
+	        temp += curr.charAt(j);
+	    }
+	    fOnly.add(temp);
+	}
+	return fOnly;
+    }
+    
     /*
         Function iterates through a set of directories recursively (via walk())
         and adds to the files List any files that contain the strings present in
