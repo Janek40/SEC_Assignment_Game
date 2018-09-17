@@ -72,12 +72,12 @@ public class PluginSetup
     {
         Platform.runLater(() ->
 	{
-        Alert alert = new Alert(AlertType.ERROR, error, ButtonType.OK);
-	alert.showAndWait();
-	if(alert.getResult() == ButtonType.OK)
-	{
+            Alert alert = new Alert(AlertType.ERROR, error, ButtonType.OK);
+	    alert.showAndWait();
+	    if(alert.getResult() == ButtonType.OK)
+	    {
 
-	}
+	    }
 	});
     }
     
