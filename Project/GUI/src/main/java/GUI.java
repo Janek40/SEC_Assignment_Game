@@ -37,7 +37,10 @@ public class GUI extends Application
 	   {
 	       try
 	       {
-	           ps.updatePluginsList();
+ 	           //Use this line to show the loading text...
+		   //try{Thread.sleep(1000);}catch(InterruptedException e){}
+
+		   ps.updatePluginsList();
 	       }
 	       catch(IOException e)
 	       {
@@ -61,15 +64,7 @@ public class GUI extends Application
 	});
 	//add this button to the stack pane
 	root.add(btn, 0, 1);
-	//System.out.println(root.getChildren().size());
-	/*
-	try
-	{
-	    Thread.sleep(1000);
-	}
-	catch(InterruptedException e){}
-	*/
-
+	
 	//set the window size and root stack pane
 	primaryStage.setScene(new Scene(root, 300, 250));
 	
