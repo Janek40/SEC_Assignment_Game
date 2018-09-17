@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 import javafx.scene.control.ListView;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
+import javafx.application.Platform;
+import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,46 +17,36 @@ import java.util.ArrayList;
 
 public class GUI extends Application
 {
-    /*public static void main(String[] args)
-    {
-        launch(args);
-    }*/
-
-
     @Override
     public void start(Stage primaryStage)
     {
-        List<String> places = new ArrayList<String>(10);
-	places.add("plugins/");
-	List<String> contains = new ArrayList<String>(10);
-	contains.add("Plugin");
-	contains.add(".class");
-	PluginFinder pf = new PluginFinder(places, contains);
-	try
-	{
-	    pf.find();
-	}
-	catch(IOException e)
-	{
-	    System.out.println(e);
-	    return;
-	}
-	
-	
 	//Set the window's title
 	primaryStage.setTitle("Hello world!");
 	
 	//add a stack pane
-	StackPane root = new StackPane();
+	//StackPane root = new StackPane();
+        GridPane root = new GridPane();
 
-        
-	ListView<String> list = new ListView<String>();
-	ObservableList<String> items = FXCollections.observableList(pf.getFiles());
-	//ObservableList<String> items = FXCollections.observableArrayList (
-	 //   "Single", "Double", "Suite", "Family App");
-	list.setItems(items);
-	root.getChildren().add(list);
-
+	PluginSetup ps = new PluginSetup(root);
+	ps.setXY(0,0);
+	ps.setPrefWidthHeight(130, 150);
+	Thread t1 = new Thread(new Runnable()
+	{
+	   @Override
+	   public void run()
+	   {
+	       try
+	       {
+	           ps.updatePluginsList();
+	       }
+	       catch(IOException e)
+	       {
+	           System.out.println(e);
+		   return;
+	       }
+	   }
+	});
+	t1.start();
 
 	//set up a button
 	Button btn = new Button();
@@ -64,13 +56,19 @@ public class GUI extends Application
 	    @Override
 	    public void handle(ActionEvent event)
 	    {
-		System.out.println(list.getSelectionModel().getSelectedIndex());
+		System.out.println(ps.getList().getSelectionModel().getSelectedIndex());
 	    }
 	});
 	//add this button to the stack pane
-	root.getChildren().add(btn);
-
-
+	root.add(btn, 0, 1);
+	//System.out.println(root.getChildren().size());
+	/*
+	try
+	{
+	    Thread.sleep(1000);
+	}
+	catch(InterruptedException e){}
+	*/
 
 	//set the window size and root stack pane
 	primaryStage.setScene(new Scene(root, 300, 250));
@@ -78,4 +76,5 @@ public class GUI extends Application
 	//Show the window
 	primaryStage.show();
     }
+    
 }
