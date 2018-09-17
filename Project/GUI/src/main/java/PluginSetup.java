@@ -6,14 +6,15 @@ import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import java.util.List;
 import java.util.ArrayList;
-
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 public class PluginSetup
 {
     private ListView<String> list = new ListView<String>();
     private GridPane root;
     private boolean added = false;
-    private boolean inError = false;
     
     private volatile Object key = new Object();
     private volatile PluginFinder pf;
@@ -32,6 +33,7 @@ public class PluginSetup
     {
         Thread t1 = new Thread(() ->
 	{
+	    boolean inError = false;
 	    List<String> places = new ArrayList<String>(1);
 	    places.add(System.getProperty("user.dir") + "/plugins/");
 	    List<String> contains = new ArrayList<String>(2);
@@ -45,27 +47,38 @@ public class PluginSetup
 	    }
 	    catch(IOException e)
 	    {
-	        updateWithError("Unable to load plugins");
-	        System.out.println("Unable to load plugins");
+		showError("Plugins directory could not be found");
+		inError=true;
 	    }
         
 	    //No plugins
-	    if(pf.getfileNames().size()==0)
+	    if(!inError && pf.getfileNames().size()==0)
 	    {
-	       updateWithError("There are no plugins in plugins/ folder");
-	       System.out.println("No plugins");
+	       showError("There are no plugins in the given folder");
 	    }
             //try{Thread.sleep(5000);}catch(InterruptedException e){}
         
             synchronized(key)
 	    {
 	        loaded = true;
-	        inError = false;
 	    }
 
 	    updateList(pf.removeExtension(6));
 	});
 	t1.start();
+    }
+
+    private void showError(String error)
+    {
+        Platform.runLater(() ->
+	{
+        Alert alert = new Alert(AlertType.ERROR, error, ButtonType.OK);
+	alert.showAndWait();
+	if(alert.getResult() == ButtonType.OK)
+	{
+
+	}
+	});
     }
     
     public ListView<String> getList()
@@ -74,7 +87,7 @@ public class PluginSetup
 	//or the plugins could not be found
 	synchronized(key)
 	{
-	    if(!loaded || inError)
+	    if(!loaded)
 	    {
                 return null;
 	    }
@@ -86,7 +99,7 @@ public class PluginSetup
     {
         synchronized(key)
 	{
-	    if(!loaded || inError)
+	    if(!loaded)
 	    {
                 return null;
 	    }
@@ -117,17 +130,6 @@ public class PluginSetup
         return FXCollections.observableList(inItems);
     }
     
-    private void updateWithError(String error)
-    {
-        synchronized(key)
-	{
-	    this.inError = true;
-	}
-	List<String> errorList = new ArrayList<String>();
-	errorList.add(error);
-	updateList(errorList);
-    }
-
     public void updateList(List<String> inItems)
     {
         ObservableList<String> items = convertToItems(inItems);
