@@ -30,22 +30,8 @@ public class GUI extends Application
 	PluginSetup ps = new PluginSetup(root);
 	ps.setXY(0,0);
 	ps.setPrefWidthHeight(130, 150);
-	Thread t1 = new Thread(() ->
-	{
-	       try
-	       {
- 	           //Use this line to show the loading text...
-		   try{Thread.sleep(5000);}catch(InterruptedException e){}
-
-		   ps.updatePluginsList();
-	       }
-	       catch(IOException e)
-	       {
-	           System.out.println(e);
-		   return;
-	       }
-	});
-	t1.start();
+	//This is run in another thread as it could be time consuming
+	ps.updatePluginsList();
 
 	//set up a button
 	Button btn = new Button();
@@ -55,17 +41,15 @@ public class GUI extends Application
 	    @Override
 	    public void handle(ActionEvent event)
 	    {
-	        int index = ps.getList().getSelectionModel().getSelectedIndex();
-		if(index!=-1)
+	        ListView<String> list = ps.getList();
+		if(list!=null)
 		{
-		    try
+		    int index = list.getSelectionModel().getSelectedIndex();
+		    PluginFinder pf = ps.getOriginalFinder();
+		    if(index!=-1 && pf!=null)
 		    {
 		        System.out.println("Selected: " 
-		            + ps.getOriginalFinder().getLocations().get(index));
-		    }
-		    catch(IOException e)
-		    {
-		        System.out.println(e);
+		            + pf.getLocations().get(index));
 		    }
 		}
 	    }
