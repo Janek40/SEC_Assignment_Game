@@ -6,6 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.IOException;
 
+//testing
+import java.lang.reflect.Method;
+
 public class PluginFinder
 {
     private List<String> searchLocations;
@@ -17,6 +20,14 @@ public class PluginFinder
     {
 	this.searchLocations = searchLocations;
 	this.mustContain = mustContain;
+
+	QuestionType q = new MultiChoicePlugin();
+	Class tClass = q.getClass();
+	Method[] methods = tClass.getMethods();
+	for(int i=0;i<methods.length;i++)
+	{
+	    System.out.println(methods[i]);
+	}
     }
 
     public List<String> getfileNames()

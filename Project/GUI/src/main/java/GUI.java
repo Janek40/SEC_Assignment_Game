@@ -21,7 +21,7 @@ public class GUI extends Application
 {
     private final int WINDOW_X = 300;
     private final int WINDOW_Y = 200;
-    private final int PLUGIN_LIST_X = 130;
+    private final int PLUGIN_LIST_X = 150;
     private final int PLUGIN_LIST_Y = 150;
 
     @Override
@@ -31,7 +31,7 @@ public class GUI extends Application
 	primaryStage.setTitle("Hello world!");
 
 	QuestionType q = new MultiChoicePlugin();
-	q.test();
+	q.getName();
 	//add a stack pane
 	//StackPane root = new StackPane();
         GridPane root = new GridPane();

@@ -2,11 +2,11 @@ public class MultiChoicePlugin extends QuestionType
 {
     public MultiChoicePlugin()
     {
+        super("MultiChoicePlugin");
     }
 
-    @Override
-    public void test()
+    public String getName()
     {
-        System.out.println("Hello from MultiChoicePlugin");
+        return super.getName();
     }
 }

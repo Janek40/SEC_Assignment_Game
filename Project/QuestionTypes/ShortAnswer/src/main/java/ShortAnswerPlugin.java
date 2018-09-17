@@ -2,11 +2,11 @@ public class ShortAnswerPlugin extends QuestionType
 {
     public ShortAnswerPlugin()
     {
+        super("ShortAnswerPlugin");
     }
 
-    @Override
-    public void test()
+    public String getName()
     {
-        System.out.println("Hello from ShortAnswerPlugin");
+        return super.getName();
     }
 }

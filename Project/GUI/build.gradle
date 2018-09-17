@@ -9,5 +9,5 @@ dependencies {
     compile project(":QuestionTypes:ShortAnswer");
     compile project(":QuestionTypes:MultiChoice");
     
-    compile project(":PluginFinder");
+    compile project(":PluginCore");
 }

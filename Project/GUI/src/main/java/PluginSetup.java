@@ -35,7 +35,7 @@ public class PluginSetup
 	{
 	    boolean inError = false;
 	    List<String> places = new ArrayList<String>(1);
-	    places.add(System.getProperty("user.dir") + "/plugins/");
+	    places.add(System.getProperty("user.dir") + "/QuestionTypes/");
 	    List<String> contains = new ArrayList<String>(2);
 	    contains.add("Plugin");
 	    contains.add(".class");
