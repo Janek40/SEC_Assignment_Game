@@ -58,7 +58,7 @@ public class GUI extends Application
 		    {
 		        System.out.println("Selected: " 
 		            + pf.getLocations().get(index));
-                        PluginLoader loader = new PluginLoader();
+                        PluginLoader<QuestionType> loader = new PluginLoader<QuestionType>();
 			try
 			{
 			    QuestionType question = loader.loadPlugin(pf.getLocations().get(index));
