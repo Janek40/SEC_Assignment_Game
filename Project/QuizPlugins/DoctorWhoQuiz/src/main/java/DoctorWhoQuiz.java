@@ -14,28 +14,28 @@ public class DoctorWhoQuiz extends QuizPlugin
     @Override
     public void runQuiz()
     {
-        System.out.println("Quiz running");
+        System.out.println("Doctor who Quiz running");
 	Thread t1 = new Thread(() ->
 	{
 	    try
 	    {
-	        Map<String, QuestionType> plugins = loadPlugins();
-	        QuestionType mcp = plugins.get("MultiChoicePlugin");
-		if(mcp==null)
-		{
-		}
+	        super.loadPlugins();
+	        QuestionType mcp = super.get("MultiChoicePlugin");
+		QuestionType sa = super.get("ShortAnswerPlugin");
 		System.out.println(mcp.getName());
+		System.out.println(sa.getName());
+		System.out.println("Done");
 	    }
             catch(IOException e)
 	    {
 	        ErrorGUI err = new ErrorGUI();
-		err.showError(e.toString());
+		err.showError(e.getMessage());
 		return;
 	    }
             catch(ClassNotFoundException e)
 	    {
 	        ErrorGUI err = new ErrorGUI();
-		err.showError(e.toString());
+		err.showError(e.getMessage());
 		return;
 	    }
 	});
