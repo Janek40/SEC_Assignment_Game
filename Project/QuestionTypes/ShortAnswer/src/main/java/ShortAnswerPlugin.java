@@ -4,9 +4,4 @@ public class ShortAnswerPlugin extends QuestionType
     {
         super("ShortAnswerPlugin");
     }
-
-    public String getName()
-    {
-        return super.getName();
-    }
 }

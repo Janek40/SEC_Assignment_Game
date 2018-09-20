@@ -4,9 +4,4 @@ public class MultiChoicePlugin extends QuestionType
     {
         super("MultiChoicePlugin");
     }
-
-    public String getName()
-    {
-        return super.getName();
-    }
 }
