@@ -75,10 +75,9 @@ public class GUI extends Application
                         PluginLoader<QuizPlugin> loader = new PluginLoader<QuizPlugin>();
 			try
 			{
-			    QuizPlugin questions = loader.loadPlugin(pf.getLocations().get(index));
-			    System.out.println(questions.getName());
+			    QuizPlugin quiz = loader.loadPlugin(pf.getLocations().get(index));
 			    //This is run on another thread
-			    questions.runQuiz();
+			    quiz.runQuiz();
 			}
 			catch(ClassNotFoundException e)
 			{
