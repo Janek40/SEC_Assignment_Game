@@ -2,6 +2,14 @@ allprojects
 {
     apply plugin: 'java'
 
+
+    compileJava
+    {
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
+        options.compilerArgs += ["-Xlint:unchecked", "-Xlint:deprecation"]
+    }
+
     repositories {
         jcenter()
     }
@@ -20,3 +28,4 @@ jar {
 dependencies {
     compile project(":GUI");
 }
+
