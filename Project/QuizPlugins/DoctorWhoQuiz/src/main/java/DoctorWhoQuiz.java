@@ -12,42 +12,27 @@ public class DoctorWhoQuiz extends QuizPlugin
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void runQuiz()
     {
         System.out.println("Quiz running");
 	Thread t1 = new Thread(() ->
 	{
-	    List<String> places = new ArrayList<String>();
-	        places.add(System.getProperty("user.dir") + "/QuestionTypes/");
-	    List<String> contains = new ArrayList<String>();
-	        contains.add("Plugin");
-		contains.add(".class");
-            PluginFinder pf = new PluginFinder(places, contains);
-            try
+	    try
 	    {
-	        pf.find();
+	        Map<String, QuestionType> plugins = loadPlugins();
+	        QuestionType mcp = plugins.get("MultiChoicePlugin");
+		if(mcp==null)
+		{
+		}
+		System.out.println(mcp.getName());
 	    }
-	    catch(IOException e)
+            catch(IOException e)
 	    {
 	        ErrorGUI err = new ErrorGUI();
 		err.showError(e.toString());
 		return;
 	    }
-
-	    try
-	    {
-	        PluginLoader loader = new PluginLoader();
-		Map<String, QuestionType> types = loader.loadPlugins(pf.getLocations());
-
-		QuestionType mcp = types.get("MultiChoicePlugin");
-		if(mcp==null)
-		{
-		    throw new ClassNotFoundException("Could not load MultiChociePlugin");
-		}
-		System.out.println("HERE: " + mcp.getName());
-            }
-	    catch(ClassNotFoundException e)
+            catch(ClassNotFoundException e)
 	    {
 	        ErrorGUI err = new ErrorGUI();
 		err.showError(e.toString());
