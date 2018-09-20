@@ -1,6 +1,7 @@
 import java.nio.file.*;
 import java.util.*;
-
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 public class PluginLoader<E> extends ClassLoader
 {
@@ -34,9 +35,26 @@ public class PluginLoader<E> extends ClassLoader
 	    Class<?> cls = defineClass(null, classData, 0, classData.length);
 	    return (E)cls.getDeclaredConstructor().newInstance();
 	}
-	catch(Exception ex)
+	//trying to load the abstract base class
+	catch(InstantiationException ex)
 	{
-	    throw new ClassNotFoundException(String.format("Could not load '%s' : %s", fname, ex.getMessage()), ex);
+	    throw new ClassNotFoundException("You cannot load the base class!");
+	}
+	catch(IOException ex)
+	{
+	    throw new ClassNotFoundException("Unable to load the given plugin");
+	}
+	catch(NoSuchMethodException ex)
+	{
+	    throw new ClassNotFoundException("Unable to load, is it the base class?");
+	}
+	catch(IllegalAccessException ex)
+	{
+	    throw new ClassNotFoundException("You do not have the permissions to load this plugin");
+	}
+	catch(InvocationTargetException ex)
+	{
+	    throw new ClassNotFoundException("Unable to invoke the given plugin");
 	}
     }
 
