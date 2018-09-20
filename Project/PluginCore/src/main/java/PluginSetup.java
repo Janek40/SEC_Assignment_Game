@@ -69,7 +69,8 @@ public class PluginSetup
 	});
 	t1.start();
     }
-    
+
+   
     public ListView<String> getList()
     {
         //if they are still being loaded
