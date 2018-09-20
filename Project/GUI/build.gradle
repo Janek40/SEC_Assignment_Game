@@ -1,13 +1,9 @@
-jar {
-    manifest {
-        attributes 'Plugin-Class': 'GUI'
-    }
-}
-
 dependencies {
     compile project(":QuestionTypes:QuestionType");
-    compile project(":QuestionTypes:ShortAnswer");
-    compile project(":QuestionTypes:MultiChoice");
     
-    compile project(":PluginCore");
+    compile project(":QuizPlugins:QuizPlugin")
+
+    compile project(":PluginCore")
+
+    compile project(":Errors")
 }
