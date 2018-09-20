@@ -20,9 +20,16 @@ public class PluginSetup
     private volatile PluginFinder pf;
     private volatile boolean loaded = false;
 
-    public PluginSetup(GridPane root)
+    private List<String> places;
+    private List<String> contains;
+
+    private ErrorGUI error = new ErrorGUI();
+
+    public PluginSetup(GridPane root, List<String> places, List<String> contains)
     {
         this.root = root;
+	this.places = places;
+	this.contains = contains;
 
         List<String> loadingList = new ArrayList<String>(1);
 	loadingList.add("loading...");
@@ -34,12 +41,7 @@ public class PluginSetup
         Thread t1 = new Thread(() ->
 	{
 	    boolean inError = false;
-	    List<String> places = new ArrayList<String>(1);
-	    places.add(System.getProperty("user.dir") + "/QuestionTypes/");
-	    List<String> contains = new ArrayList<String>(2);
-	    contains.add("Plugin");
-	    contains.add(".class");
-	    pf = new PluginFinder(places, contains);
+            pf = new PluginFinder(places, contains);
 	
 	    try
 	    {
@@ -47,14 +49,14 @@ public class PluginSetup
 	    }
 	    catch(IOException e)
 	    {
-		showError("Plugins directory could not be found");
+		error.showError("Plugins directory could not be found");
 		inError=true;
 	    }
         
 	    //No plugins
 	    if(!inError && pf.getfileNames().size()==0)
 	    {
-	       showError("There are no plugins in the given folder");
+	       error.showError("There are no plugins in the given folder");
 	    }
             //try{Thread.sleep(5000);}catch(InterruptedException e){}
         
@@ -66,19 +68,6 @@ public class PluginSetup
 	    updateList(pf.removeExtension(6));
 	});
 	t1.start();
-    }
-
-    public void showError(String error)
-    {
-        Platform.runLater(() ->
-	{
-            Alert alert = new Alert(AlertType.ERROR, error, ButtonType.OK);
-	    alert.showAndWait();
-	    if(alert.getResult() == ButtonType.OK)
-	    {
-
-	    }
-	});
     }
     
     public ListView<String> getList()
