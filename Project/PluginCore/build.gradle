@@ -1,4 +1,4 @@
 dependencies{
-    compile project(":QuestionTypes:QuestionType");
-    compile project(":QuestionTypes:MultiChoice");
+    compile project(":QuestionTypes:QuestionType")
+    compile project(":Errors")
 }
