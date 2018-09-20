@@ -69,8 +69,6 @@ public class GUI extends Application
 		    //if the index isn't invalid and plugin finder is not null
 		    if(index!=-1 && pf!=null)
 		    {
-		        System.out.println("Selected: " 
-		            + pf.getLocations().get(index));
 			//Load the quiz
                         PluginLoader<QuizPlugin> loader = new PluginLoader<QuizPlugin>();
 			try
