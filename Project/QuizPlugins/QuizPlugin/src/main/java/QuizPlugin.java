@@ -7,7 +7,8 @@ import java.util.Map;
 public abstract class QuizPlugin
 {
     private String name;
-    
+    private Map<String, QuestionType> types;
+
     public QuizPlugin(String name)
     {
         this.name = name;
@@ -21,7 +22,7 @@ public abstract class QuizPlugin
     public abstract void runQuiz();
 
     @SuppressWarnings("unchecked")
-    protected Map<String, QuestionType> loadPlugins() throws IOException, ClassNotFoundException
+    protected void loadPlugins() throws IOException, ClassNotFoundException
     {
         List<String> places = new ArrayList<String>();
 	places.add(System.getProperty("user.dir") + "/QuestionTypes/");
@@ -32,7 +33,16 @@ public abstract class QuizPlugin
 	pf.find();
 
 	PluginLoader loader = new PluginLoader();
-	Map<String, QuestionType> types = loader.loadPlugins(pf.getLocations());
-	return types;
+	types = loader.loadPlugins(pf.getLocations());
+    }
+
+    protected QuestionType get(String key) throws ClassNotFoundException
+    {
+        QuestionType question = types.get(key);
+	if(question==null)
+	{
+	    throw new ClassNotFoundException(key + " was not found!");
+	}
+	return question;
     }
 }
