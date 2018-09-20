@@ -79,7 +79,7 @@ public class GUI extends Application
 			}
 			catch(ClassNotFoundException e)
 			{
-			    error.showError(e.toString());
+			    error.showError(e.getMessage());
 			}
 		    }
 		}
