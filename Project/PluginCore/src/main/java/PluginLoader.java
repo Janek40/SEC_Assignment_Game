@@ -9,44 +9,43 @@ public class PluginLoader<E> extends ClassLoader
     
     
     @SuppressWarnings("unchecked")
-    public Map<String, E> loadPlugins(List<String> locations) throws ClassNotFoundException
-    {
-        Map<String, E> plugins = new HashMap<String, E>();
-	int length = locations.size();
-        E plugin;
-	String location;
-	for(int i=0;i<length;i++)
-	{
-            location = locations.get(i);
-	    plugin = loadPlugin(location);
-	    String className = getClassName(plugin);
-	    plugins.put(className, plugin);
-	}
-	return plugins;
-    }
-
-    
-    @SuppressWarnings("unchecked")
-    public E loadPlugin(String fname) throws ClassNotFoundException
+    public E loadPlugin(String loc) throws ClassNotFoundException
     {
         try
 	{
-	    if(fname.equals("/media/sf_SEC_Assignment_Game/Project/QuizPlugins/DoctorWhoQuiz/build/classes/java/main/DoctorWhoQuiz.class"))
+	    JarReader jreader = new JarReader();
+	    jreader.readJar(loc);
+	    List<byte[]> contents = jreader.getContents();
+	    List<String> names = jreader.getNames();
+	    
+	    int i;
+	    String base=null;
+	    for(i=0;i<names.size();i++)
 	    {
-	        byte[] classData = Files.readAllBytes(Paths.get(fname));
-		byte[] classData2 = Files.readAllBytes(Paths.get("/media/sf_SEC_Assignment_Game/Project/QuizPlugins/DoctorWhoQuiz/build/classes/java/main/DoctorWhoQuiz$1.class"));
-		Class<?> cls = defineClass(null, classData, 0, classData.length);
-		Class<?> cls2 = defineClass(null, classData2, 0, classData2.length);
-                resolveClass(cls2);
+	        base = names.get(i);
+	        if(!base.contains("$"))
+		{
+		    break;
+		}
+	    }
+            
+	    if(base==null)
+	    {
+	        return null;
+	    }
 
-	        return (E)cls.getDeclaredConstructor().newInstance();
-	    }
-	    else
+            byte[] basePlugin = contents.remove(i);
+	    Class<?> cls = defineClass(null, basePlugin, 0, basePlugin.length);
+	    E obj = (E)cls.getDeclaredConstructor().newInstance();
+            
+	    for(i=0;i<contents.size();i++)
 	    {
-	        byte[] classData = Files.readAllBytes(Paths.get(fname));
-	        Class<?> cls = defineClass(null, classData, 0, classData.length);
-	        return (E)cls.getDeclaredConstructor().newInstance();
+	        byte[] innerClass = contents.remove(i);
+	        Class<?> cls2 = defineClass(null, innerClass, 0, innerClass.length);
+                resolveClass(cls);
 	    }
+            System.out.println("    Loaded: " + obj.toString());
+	    return obj;
 	}
 	//trying to load the abstract base class
 	catch(InstantiationException ex)
@@ -68,6 +67,10 @@ public class PluginLoader<E> extends ClassLoader
 	catch(InvocationTargetException ex)
 	{
 	    throw new ClassNotFoundException("Unable to invoke the given plugin");
+	}
+	catch(java.lang.LinkageError ex)
+	{
+	    return null;
 	}
     }
 

@@ -65,7 +65,7 @@ public class PluginSetup
 	        loaded = true;
 	    }
         
-	    updateList(pf.removeExtension(6));
+	    updateList(pf.removeExtension(4));
 	});
 	t1.start();
     }

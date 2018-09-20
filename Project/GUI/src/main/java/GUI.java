@@ -16,6 +16,7 @@ import javafx.geometry.Insets;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class GUI extends Application
 {
@@ -41,7 +42,7 @@ public class GUI extends Application
 	//What a quiz plugin should look like
 	List<String> contains = new ArrayList<String>(2);
 	    contains.add("Quiz");
-	    contains.add(".class");
+	    contains.add(".jar");
 	PluginSetup ps = new PluginSetup(root, places, contains);
 	//location
 	ps.setXY(1,0);

@@ -84,7 +84,7 @@ public class PluginFinder
 		    if(contains)
 		    {
 		        fileNames.add(filePath.getFileName().toString());
-			locations.add(/*System.getProperty("user.dir") + "/" + */filePath.toString());
+			locations.add(filePath.toString());
 		    }
 		});
 	    }

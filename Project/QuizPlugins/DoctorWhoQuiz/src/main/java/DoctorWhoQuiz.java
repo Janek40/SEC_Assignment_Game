@@ -46,16 +46,31 @@ public class DoctorWhoQuiz extends QuizPlugin
 		    });
 		}
 	    });
+            Button btn2 = new Button();
+	    btn2.setText("Back");
+	    btn2.setOnAction(new EventHandler<ActionEvent>()
+	    {
+	        @Override
+		public void handle(ActionEvent event)
+		{
+		    Platform.runLater(() ->
+		    {
+		        primaryStage.setScene(prevScene);
+		    });
+		}
+	    });
+
 	    Platform.runLater(() ->
 	    {
 	        newRoot.add(btn, 0, 0);
+	        newRoot.add(btn2, 0, 1);
 	    });
 
 	    try
 	    {
 	        super.loadPlugins();
-	        QuestionType mcp = super.get("MultiChoicePlugin");
-		QuestionType sa = super.get("ShortAnswerPlugin");
+	        QuestionType mcp = super.get("MultiChoice");
+		QuestionType sa = super.get("ShortAnswer");
 		System.out.println(mcp.getName());
 		System.out.println(sa.getName());
 		System.out.println("Done");

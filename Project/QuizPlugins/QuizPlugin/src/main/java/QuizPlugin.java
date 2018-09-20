@@ -5,12 +5,13 @@ import java.util.Map;
 import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.Scene;
+import java.util.HashMap;
 
 
 public abstract class QuizPlugin
 {
     private String name;
-    private Map<String, QuestionType> types;
+    private Map<String, QuestionType> types = new HashMap<String, QuestionType>();
 
     public QuizPlugin(String name)
     {
@@ -30,13 +31,20 @@ public abstract class QuizPlugin
         List<String> places = new ArrayList<String>();
 	places.add(System.getProperty("user.dir") + "/QuestionTypes/");
 	    List<String> contains = new ArrayList<String>();
-	contains.add("Plugin");
-	    contains.add(".class");
+	    contains.add(".jar");
         PluginFinder pf = new PluginFinder(places, contains);
 	pf.find();
-
-	PluginLoader loader = new PluginLoader();
-	types = loader.loadPlugins(pf.getLocations());
+        
+	PluginLoader<QuestionType> loader = new PluginLoader<QuestionType>();
+        List<String> locations = pf.getLocations();
+	for(int i=0;i<locations.size();i++)
+	{
+	    QuestionType question = loader.loadPlugin(locations.get(i));
+	    if(question!=null)
+	    {
+	        types.put(question.getName(), question);
+	    }
+	}
     }
 
     protected QuestionType get(String key) throws ClassNotFoundException
