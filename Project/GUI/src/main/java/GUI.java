@@ -30,14 +30,13 @@ public class GUI extends Application
 	//Set the window's title
 	primaryStage.setTitle("Hello world!");
 
-	QuestionType q = new MultiChoicePlugin();
-	q.getName();
-	//add a stack pane
-	//StackPane root = new StackPane();
         GridPane root = new GridPane();
         
+	//Creates the list of plugins found
 	PluginSetup ps = new PluginSetup(root);
+	//location
 	ps.setXY(1,0);
+	//size
 	ps.setPrefWidthHeight(PLUGIN_LIST_X, PLUGIN_LIST_Y);
 	//This is run in another thread as it could be time consuming
 	ps.updatePluginsList();
@@ -59,6 +58,16 @@ public class GUI extends Application
 		    {
 		        System.out.println("Selected: " 
 		            + pf.getLocations().get(index));
+                        PluginLoader loader = new PluginLoader();
+			try
+			{
+			    QuestionType question = loader.loadPlugin(pf.getLocations().get(index));
+			    System.out.println(question.getName());
+			}
+			catch(ClassNotFoundException e)
+			{
+			    ps.showError(e.toString());
+			}
 		    }
 		}
 	    }
