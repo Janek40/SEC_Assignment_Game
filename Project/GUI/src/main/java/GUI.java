@@ -73,9 +73,11 @@ public class GUI extends Application
                         PluginLoader<QuizPlugin> loader = new PluginLoader<QuizPlugin>();
 			try
 			{
+			    //Load the quiz
 			    QuizPlugin quiz = loader.loadPlugin(pf.getLocations().get(index));
 			    //This is run on another thread
-			    quiz.runQuiz();
+			    //run the quiz
+			    quiz.runQuiz(primaryStage.getScene(), primaryStage);
 			}
 			catch(ClassNotFoundException e)
 			{
@@ -95,7 +97,8 @@ public class GUI extends Application
 
 
 	//set the window size and root stack pane
-	primaryStage.setScene(new Scene(root, WINDOW_X, WINDOW_Y));
+	Scene scene = new Scene(root, WINDOW_X, WINDOW_Y);
+	primaryStage.setScene(scene);
 	
 	//Show the window
 	primaryStage.show();
