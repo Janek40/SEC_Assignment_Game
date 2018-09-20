@@ -31,9 +31,22 @@ public class PluginLoader<E> extends ClassLoader
     {
         try
 	{
-	    byte[] classData = Files.readAllBytes(Paths.get(fname));
-	    Class<?> cls = defineClass(null, classData, 0, classData.length);
-	    return (E)cls.getDeclaredConstructor().newInstance();
+	    if(fname.equals("/media/sf_SEC_Assignment_Game/Project/QuizPlugins/DoctorWhoQuiz/build/classes/java/main/DoctorWhoQuiz.class"))
+	    {
+	        byte[] classData = Files.readAllBytes(Paths.get(fname));
+		byte[] classData2 = Files.readAllBytes(Paths.get("/media/sf_SEC_Assignment_Game/Project/QuizPlugins/DoctorWhoQuiz/build/classes/java/main/DoctorWhoQuiz$1.class"));
+		Class<?> cls = defineClass(null, classData, 0, classData.length);
+		Class<?> cls2 = defineClass(null, classData2, 0, classData2.length);
+                resolveClass(cls2);
+
+	        return (E)cls.getDeclaredConstructor().newInstance();
+	    }
+	    else
+	    {
+	        byte[] classData = Files.readAllBytes(Paths.get(fname));
+	        Class<?> cls = defineClass(null, classData, 0, classData.length);
+	        return (E)cls.getDeclaredConstructor().newInstance();
+	    }
 	}
 	//trying to load the abstract base class
 	catch(InstantiationException ex)
