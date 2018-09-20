@@ -1,5 +1,0 @@
-jar {
-    manifest {
-            attributes 'Plugin-Class': 'QuestionType'
-    }
-}
