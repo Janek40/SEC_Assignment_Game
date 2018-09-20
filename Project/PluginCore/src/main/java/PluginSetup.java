@@ -68,7 +68,7 @@ public class PluginSetup
 	t1.start();
     }
 
-    private void showError(String error)
+    public void showError(String error)
     {
         Platform.runLater(() ->
 	{
