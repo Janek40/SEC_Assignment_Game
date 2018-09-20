@@ -34,9 +34,11 @@ public class GUI extends Application
 
         GridPane root = new GridPane();
         
-	//Creates the list of plugins found
+	//Creates the list of Quizzes
+	//Where to look
 	List<String> places = new ArrayList<String>(1);
 	    places.add(System.getProperty("user.dir") + "/QuizPlugins/");
+	//What a quiz plugin should look like
 	List<String> contains = new ArrayList<String>(2);
 	    contains.add("Quiz");
 	    contains.add(".class");
@@ -45,6 +47,7 @@ public class GUI extends Application
 	ps.setXY(1,0);
 	//size
 	ps.setPrefWidthHeight(PLUGIN_LIST_X, PLUGIN_LIST_Y);
+	//Find the plugins
 	//This is run in another thread as it could be time consuming
 	ps.updatePluginsList();
 
@@ -59,17 +62,23 @@ public class GUI extends Application
 	        ListView<String> list = ps.getList();
 		if(list!=null)
 		{
+		    //get the selected quiz
 		    int index = list.getSelectionModel().getSelectedIndex();
+		    //contains exact locations and filenames
 		    PluginFinder pf = ps.getOriginalFinder();
+		    //if the index isn't invalid and plugin finder is not null
 		    if(index!=-1 && pf!=null)
 		    {
 		        System.out.println("Selected: " 
 		            + pf.getLocations().get(index));
+			//Load the quiz
                         PluginLoader<QuizPlugin> loader = new PluginLoader<QuizPlugin>();
 			try
 			{
-			    QuizPlugin question = loader.loadPlugin(pf.getLocations().get(index));
-			    System.out.println(question.getName());
+			    QuizPlugin questions = loader.loadPlugin(pf.getLocations().get(index));
+			    System.out.println(questions.getName());
+			    //This is run on another thread
+			    questions.runQuiz();
 			}
 			catch(ClassNotFoundException e)
 			{
