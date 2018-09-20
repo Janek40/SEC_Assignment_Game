@@ -2,6 +2,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.util.Map;
+import javafx.stage.Stage;
+import javafx.scene.layout.GridPane;
+import javafx.scene.Scene;
 
 
 public abstract class QuizPlugin
@@ -19,7 +22,7 @@ public abstract class QuizPlugin
         return this.name;
     }
 
-    public abstract void runQuiz();
+    public abstract void runQuiz(Scene root, Stage primaryStage);
 
     @SuppressWarnings("unchecked")
     protected void loadPlugins() throws IOException, ClassNotFoundException
