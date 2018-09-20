@@ -24,6 +24,8 @@ public class GUI extends Application
     private final int PLUGIN_LIST_X = 150;
     private final int PLUGIN_LIST_Y = 150;
 
+    private ErrorGUI error = new ErrorGUI();
+
     @Override
     public void start(Stage primaryStage)
     {
@@ -33,7 +35,12 @@ public class GUI extends Application
         GridPane root = new GridPane();
         
 	//Creates the list of plugins found
-	PluginSetup ps = new PluginSetup(root);
+	List<String> places = new ArrayList<String>(1);
+	    places.add(System.getProperty("user.dir") + "/QuizPlugins/");
+	List<String> contains = new ArrayList<String>(2);
+	    contains.add("Quiz");
+	    contains.add(".class");
+	PluginSetup ps = new PluginSetup(root, places, contains);
 	//location
 	ps.setXY(1,0);
 	//size
@@ -58,15 +65,15 @@ public class GUI extends Application
 		    {
 		        System.out.println("Selected: " 
 		            + pf.getLocations().get(index));
-                        PluginLoader<QuestionType> loader = new PluginLoader<QuestionType>();
+                        PluginLoader<QuizPlugin> loader = new PluginLoader<QuizPlugin>();
 			try
 			{
-			    QuestionType question = loader.loadPlugin(pf.getLocations().get(index));
+			    QuizPlugin question = loader.loadPlugin(pf.getLocations().get(index));
 			    System.out.println(question.getName());
 			}
 			catch(ClassNotFoundException e)
 			{
-			    ps.showError(e.toString());
+			    error.showError(e.toString());
 			}
 		    }
 		}

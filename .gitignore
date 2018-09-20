@@ -28,3 +28,7 @@ Project/QuestionTypes/MultiChoice/build/tmp/jar/MANIFEST.MF
 Project/QuestionTypes/QuestionType/build/tmp/jar/MANIFEST.MF
 Project/QuestionTypes/ShortAnswer/build/tmp/jar/MANIFEST.MF
 Project/PluginCore/build/classes/java/main/PluginSetup$1.class
+Project/QuizPlugins/DoctorWhoQuiz/build/tmp/jar/MANIFEST.MF
+Project/QuizPlugins/build/tmp/jar/MANIFEST.MF
+Project/QuizPlugins/QuizPlugin/build/tmp/jar/MANIFEST.MF
+Project/Errors/build/tmp/jar/MANIFEST.MF
