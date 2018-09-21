@@ -38,7 +38,7 @@ public class GUI extends Application
 	//Creates the list of Quizzes
 	//Where to look
 	List<String> places = new ArrayList<String>(1);
-	    places.add(System.getProperty("user.dir") + "/QuizPlugins/");
+	    places.add(System.getProperty("user.dir") + "/plugins/Quizzes/");
 	//What a quiz plugin should look like
 	List<String> contains = new ArrayList<String>(2);
 	    contains.add("Quiz");
@@ -75,7 +75,7 @@ public class GUI extends Application
 			try
 			{
 			    //Load the quiz
-			    QuizPlugin quiz = loader.loadPlugin(pf.getLocations().get(index));
+			    QuizPlugin quiz = loader.loadPlugin(pf.getLocations().get(index), pf.removeExtension(4).get(index), QuizPlugin.class);
 			    //This is run on another thread
 			    //run the quiz
 			    quiz.runQuiz(primaryStage.getScene(), primaryStage);
