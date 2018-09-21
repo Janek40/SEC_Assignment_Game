@@ -79,15 +79,25 @@ public class DoctorWhoQuiz extends QuizPlugin
 	    {
 	        ErrorGUI err = new ErrorGUI();
 		err.showError(e.getMessage());
+		returnToMain(prevScene, primaryStage);
 		return;
 	    }
             catch(ClassNotFoundException e)
 	    {
 	        ErrorGUI err = new ErrorGUI();
 		err.showError(e.getMessage());
+		returnToMain(prevScene, primaryStage);
 		return;
 	    }
 	});
 	t1.start();
+    }
+
+    private void returnToMain(Scene prevScene, Stage primaryStage)
+    {
+        Platform.runLater(() ->
+        {
+            primaryStage.setScene(prevScene);
+        });
     }
 }
