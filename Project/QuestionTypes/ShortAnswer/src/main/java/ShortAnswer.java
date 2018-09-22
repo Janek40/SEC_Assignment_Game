@@ -4,4 +4,10 @@ public class ShortAnswer extends QuestionType
     {
         super("ShortAnswer");
     }
+
+    @Override
+    public Question makeQuestion(Object... args)
+    {
+        return null;
+    }
 }
