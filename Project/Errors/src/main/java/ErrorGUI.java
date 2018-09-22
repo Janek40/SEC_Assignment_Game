@@ -12,7 +12,8 @@ public class ErrorGUI
 
     public void showError(String error)
     {
-        Platform.runLater(() ->
+        System.out.println(error);
+	Platform.runLater(() ->
 	{
 	    Alert alert = new Alert(AlertType.ERROR, error, ButtonType.OK);
 	    alert.showAndWait();
