@@ -9,7 +9,7 @@ public abstract class QuestionType
     {
         return name;
     }
-
+    
     public abstract Question makeQuestion(Object... args);
 
 }
