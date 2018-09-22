@@ -1,9 +1,15 @@
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Button;
+import javafx.scene.control.Toggle;
+import javafx.application.Platform;
+import javafx.scene.Node;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class MultiChoice extends QuestionType
 {
@@ -11,58 +17,132 @@ public class MultiChoice extends QuestionType
     {
         super("MultiChoice");
     }
+    
 
     @Override
+    @SuppressWarnings("unchecked")
     public Question makeQuestion(Object... args)
     {
-        String desc = (String)args[0];
-	String[] choices = (String[])args[1];
+	LinkedBlockingQueue<Integer> score = (LinkedBlockingQueue<Integer>)args[0];
+	String desc = (String)args[1];
+	String[] choices = (String[])args[2];
 	int correct = ((Integer)args[args.length-1]).intValue();
-
-	return makeQuestionActual(desc, choices, correct);
+                 
+	return makeQuestionActual(score, desc, choices, correct);
     }
+    
+    private volatile Object scoreKey = new Object();
+    private volatile int myScore = -1;
 
-    private Question makeQuestionActual(String desc, String[] choices, int correctIdx)
+    private Question makeQuestionActual(LinkedBlockingQueue<Integer> score, String desc, String[] choices, int correctIdx)
     {
-        GridPane root = new GridPane();
-	
+        //main grid
+	GridPane root = new GridPane();
+	//Submit button
+	Button submitBtn = new Button();
+	//end message
+	Label endMessage = new Label();
+	Button nextBtn = new Button();
+	nextBtn.setText("Next");
 	//description
-	Label label = new Label(desc);
-	root.add(label, 0,0);
+	Label descLabel = new Label(desc);
         //choices
+	ToggleGroup choicesGroup = new ToggleGroup();
+	VBox vbox = new VBox();
 	int i;
 	for(i=0;i<choices.length;i++)
 	{
-	    root.add(new Label(choices[i]), i, 1);    
+	    RadioButton button = new RadioButton(choices[i]);
+	    button.setUserData(String.valueOf(i));
+	    //when selected, make the submit button enabled
+	    button.setOnAction((ActionEvent e) ->
+	    {
+	        submitBtn.setDisable(false);
+	    });
+	    button.setToggleGroup(choicesGroup);
+	    vbox.getChildren().add(button);
 	}
-        //input box
-	/*
-	Label labelIn = new Label("Answer:");
-	TextField input = new TextField();
-	input.setOnAction(new EventHandler<ActionEvent>()
+        
+        
+	submitBtn.setText("Submit");
+	submitBtn.setDisable(true);
+	submitBtn.setOnAction(new EventHandler<ActionEvent>()
 	{
-	    @Override 
+	    @Override
 	    public void handle(ActionEvent event)
 	    {
-	        if(choices[correctIdx].equals(input.getCharacters().toString()))
+                Toggle selected = choicesGroup.getSelectedToggle();
+		if(selected!=null)
 		{
-		    System.out.println("correct!");
+		    System.out.println(selected.getUserData().toString());
+		    String message;
+		    if(selected.getUserData().toString().equals(String.valueOf(correctIdx)))
+		    {
+		        System.out.println("Correct!");
+			message = "Correct!";
+			synchronized(scoreKey)
+			{
+			    myScore = 1;
+			    scoreKey.notify();
+			}
+		    }
+		    else
+		    {
+		        System.out.println("Wrong!");
+			message = "Wrong!";
+			synchronized(scoreKey)
+			{
+			    myScore = 0;
+			    scoreKey.notify();
+			}
+		    }
+                    Platform.runLater(() ->
+		    {
+		        choicesGroup.getToggles().forEach(toggle ->
+			{
+			    Node node = (Node)toggle;
+			    node.setDisable(true);
+			});
+			endMessage.setText(message);
+		        root.add(nextBtn, 0, 4);
+		    });
 		}
-		else
+	    }
+	});
+
+	nextBtn.setOnAction(new EventHandler<ActionEvent>()
+	{
+	    @Override
+	    public void handle(ActionEvent event)
+	    {
+		try
 		{
-		    System.out.println("Noooo");
+		    synchronized(scoreKey)
+		    {
+		        if(myScore==-1)
+			{
+			    scoreKey.wait();
+			}
+		        score.put(myScore);
+			myScore = -1;
+		    }
+		}
+		catch(InterruptedException e)
+		{
+		    System.out.println("Interrupted!");
 		}
 	    }
 	});
 	
-	HBox hb = new HBox();
-	hb.getChildren().addAll(labelIn, input);
-	hb.setSpacing(10);
-
-	root.add(hb, 0, i);
-        */
+	//description
+	root.add(descLabel, 0,0);
+	//options
+	root.add(vbox, 0,1);
+	//submit button
+	root.add(submitBtn, 0,2);
+	//end message
+        root.add(endMessage, 0, 3);
+        
 	return new Question(root);
-
-
     }
 }
