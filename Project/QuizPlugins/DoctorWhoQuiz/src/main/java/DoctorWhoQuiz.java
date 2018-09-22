@@ -33,46 +33,16 @@ public class DoctorWhoQuiz extends QuizPlugin
 	        primaryStage.setScene(new Scene(newRoot, WINDOW_X, WINDOW_Y));
 	        primaryStage.show();
 	    });
-	    Button btn = new Button();
-	    btn.setText("Back");
-	    btn.setOnAction(new EventHandler<ActionEvent>()
-	    {
-	        @Override
-		public void handle(ActionEvent event)
-		{
-		    Platform.runLater(() ->
-		    {
-		        primaryStage.setScene(prevScene);
-		    });
-		}
-	    });
-            Button btn2 = new Button();
-	    btn2.setText("Back");
-	    btn2.setOnAction(new EventHandler<ActionEvent>()
-	    {
-	        @Override
-		public void handle(ActionEvent event)
-		{
-		    Platform.runLater(() ->
-		    {
-		        primaryStage.setScene(prevScene);
-		    });
-		}
-	    });
-
-	    Platform.runLater(() ->
-	    {
-	        newRoot.add(btn, 0, 0);
-	        newRoot.add(btn2, 0, 1);
-	    });
-
+	    
 	    try
 	    {
 	        super.loadPlugins();
 	        QuestionType mcp = super.get("MultiChoice");
 		QuestionType sa = super.get("ShortAnswer");
-		System.out.println(mcp.getName());
-		System.out.println(sa.getName());
+                
+		Question q1 = mcp.makeQuestion("What is my name?", new String[] { "Janek", "Tom" }, 0);
+
+		q1.invoke(20, primaryStage);
 		System.out.println("Done");
 	    }
             catch(IOException e)

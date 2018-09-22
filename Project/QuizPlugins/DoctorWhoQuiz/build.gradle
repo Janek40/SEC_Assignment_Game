@@ -1,3 +1,5 @@
 dependencies{
     compile project(":QuizPlugins:QuizPlugin")
+    compile project(":QuestionTypes:MultiChoice")
+    compile project(":QuestionTypes:ShortAnswer")
 }
