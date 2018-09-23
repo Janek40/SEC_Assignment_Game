@@ -28,13 +28,25 @@ public class MultiChoice extends QuestionType
 	String[] choices = (String[])args[2];
 	int correct = ((Integer)args[args.length-1]).intValue();
                  
-	return makeQuestionActual(score, desc, choices, correct);
+	GridPane regularRoot = makeQuestionActual(score, desc, choices, correct);
+	GridPane previewRoot = makePreview(desc);
+	return new Question(regularRoot, previewRoot);
+    }
+    
+    @Override
+    private GridPane makePreview(String desc)
+    {
+        GridPane root = new GridPane();
+	Label descLabel = new Label(desc);
+	descLabel.setText(desc);
+	root.add(descLabel, 0, 0);
+	return root;
     }
     
     private volatile Object scoreKey = new Object();
-    private volatile int myScore = 0;
+    private volatile int myScore = -1;
 
-    private Question makeQuestionActual(LinkedBlockingQueue<Integer> score, String desc, String[] choices, int correctIdx)
+    private GridPane makeQuestionActual(LinkedBlockingQueue<Integer> score, String desc, String[] choices, int correctIdx)
     {
         //main grid
 	GridPane root = new GridPane();
@@ -82,7 +94,7 @@ public class MultiChoice extends QuestionType
 			{
 			    System.out.println("Set score to 1");
 			    myScore = 1;
-			  //  scoreKey.notify();
+			    scoreKey.notify();
 			}
 		    }
 		    else
@@ -93,7 +105,7 @@ public class MultiChoice extends QuestionType
 			{
 			    System.out.println("Set score to 0");
 			    myScore = 0;
-			    //scoreKey.notify();
+			    scoreKey.notify();
 			}
 		    }
                     Platform.runLater(() ->
@@ -131,10 +143,10 @@ public class MultiChoice extends QuestionType
 		{
 		    synchronized(scoreKey)
 		    {
-		        /*if(myScore==-1)
+		        if(myScore==-1)
 			{
 			    scoreKey.wait();
-			}*/
+			}
 		        score.put(myScore);
 			//myScore = -1;
 		    }
@@ -160,6 +172,6 @@ public class MultiChoice extends QuestionType
 	//next button
 	root.add(nextBtn, 0, 4);
         
-	return new Question(root);
+	return root;
     }
 }
