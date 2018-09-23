@@ -18,7 +18,7 @@ public class DoctorWhoQuiz extends QuizPlugin
 {
     private final int WINDOW_X = 500;
     private final int WINDOW_Y = 500;
-    private volatile LinkedBlockingQueue<Integer> score = new LinkedBlockingQueue<Integer>();
+    //private volatile LinkedBlockingQueue<Integer> score = new LinkedBlockingQueue<Integer>();
 
     public DoctorWhoQuiz()
     {
@@ -46,21 +46,21 @@ public class DoctorWhoQuiz extends QuizPlugin
 	        QuestionType mcp = super.get("MultiChoice");
 		QuestionType sa = super.get("ShortAnswer");
                 
-		Question q1 = mcp.makeQuestion(score, "What is my name?", new String[] { "Janek", "Tom" }, 0);
-		Question q2 = mcp.makeQuestion(score, "What is my middle name?", new String[] { "Bob", "Karl" }, 1);
-		Question q3 = mcp.makeQuestion(score, "What is my last name?", new String[] { "Joyce", "Scott" }, 0);
+		Question q1 = mcp.makeQuestion("What is my name?", new String[] { "Janek", "Tom" }, 0);
+		Question q2 = mcp.makeQuestion("What is my middle name?", new String[] { "Bob", "Karl" }, 1);
+		Question q3 = mcp.makeQuestion("What is my last name?", new String[] { "Joyce", "Scott" }, 0);
                 
 		try
 		{
-		    Future<Integer> q1Ans = q1.invoke(20, primaryStage, score, false);
-		    q2.invoke(0, primaryStage, null, true);
+		    Future<Integer> q1Ans = q1.invoke(0, primaryStage, false);
+		    q2.invoke(0, primaryStage, true);
 		    myScore += q1Ans.get();
 
-		    Future<Integer> q2Ans = q2.invoke(20, primaryStage, score, false);
-		    q3.invoke(0, primaryStage, null, true);
+		    Future<Integer> q2Ans = q2.invoke(20, primaryStage, false);
+		    q3.invoke(0, primaryStage, true);
 		    myScore += q2Ans.get();
 		    
-		    Future<Integer> q3Ans = q3.invoke(30, primaryStage, score, false);
+		    Future<Integer> q3Ans = q3.invoke(30, primaryStage, false);
 		    myScore += q3Ans.get();
 		}
 		catch(InterruptedException e)

@@ -23,18 +23,18 @@ public class MultiChoice extends QuestionType
     @SuppressWarnings("unchecked")
     public Question makeQuestion(Object... args)
     {
-	LinkedBlockingQueue<Integer> score = (LinkedBlockingQueue<Integer>)args[0];
-	String desc = (String)args[1];
-	String[] choices = (String[])args[2];
+	//LinkedBlockingQueue<Integer> score = new LinkedBlockingQueue<Integer>();//(LinkedBlockingQueue<Integer>)args[0];
+	String desc = (String)args[0];
+	String[] choices = (String[])args[1];
 	int correct = ((Integer)args[args.length-1]).intValue();
                  
-	GridPane regularRoot = makeQuestionActual(score, desc, choices, correct);
+	GridPane regularRoot = makeQuestionActual(desc, choices, correct);
 	GridPane previewRoot = makePreview(desc);
-	return new Question(regularRoot, previewRoot);
+	return new Question(regularRoot, previewRoot, super.getScore());
     }
     
     @Override
-    private GridPane makePreview(String desc)
+    protected GridPane makePreview(String desc)
     {
         GridPane root = new GridPane();
 	Label descLabel = new Label(desc);
@@ -46,7 +46,7 @@ public class MultiChoice extends QuestionType
     private volatile Object scoreKey = new Object();
     private volatile int myScore = -1;
 
-    private GridPane makeQuestionActual(LinkedBlockingQueue<Integer> score, String desc, String[] choices, int correctIdx)
+    private GridPane makeQuestionActual(String desc, String[] choices, int correctIdx)
     {
         //main grid
 	GridPane root = new GridPane();

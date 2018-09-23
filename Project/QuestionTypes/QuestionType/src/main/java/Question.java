@@ -25,16 +25,18 @@ public class Question
     //This pane has been populated by the correct buttons etc already!
     protected GridPane regularRoot;
     protected GridPane previewRoot;
+    private LinkedBlockingQueue<Integer> score;
     private ExecutorService executor = Executors.newFixedThreadPool(1);
     
-    public Question(GridPane regularRoot, GridPane previewRoot)
+    public Question(GridPane regularRoot, GridPane previewRoot, LinkedBlockingQueue<Integer> score)
     {
         this.regularRoot = regularRoot;
 	this.previewRoot = previewRoot;
+	this.score = score;
     }
 
 
-    public Future<Integer> invoke(int time, Stage primaryStage, LinkedBlockingQueue<Integer> score, boolean showPreview)
+    public Future<Integer> invoke(int time, Stage primaryStage/*, LinkedBlockingQueue<Integer> score*/, boolean showPreview)
     {
         if(!showPreview)
 	{

@@ -1,12 +1,14 @@
+import javafx.scene.layout.GridPane;
+import java.util.concurrent.LinkedBlockingQueue;
+
 public abstract class QuestionType
 {
     private String name;
- //   protected GridPane root;
+    public LinkedBlockingQueue<Integer> score = new LinkedBlockingQueue<Integer>();
     
     public QuestionType(String inName)
     {
         this.name = inName;
-//	this.root = new GridPane();
     }
 
     public String getName()
@@ -14,13 +16,13 @@ public abstract class QuestionType
         return this.name;
     }
 
-  //  public GridPane getRoot()
-    //{
-      //  return this.root;
-    //}
+    public LinkedBlockingQueue<Integer> getScore()
+    {
+        return score;
+    }
 
     public abstract Question makeQuestion(Object... args);
-    public abstract GridPane makePreview(String desc);
-    public abstract void restartQuiz();
+    protected abstract GridPane makePreview(String desc);
+ //   public abstract void restartQuiz();
     //public abstract void returnToQuizSelection();
 }
