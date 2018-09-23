@@ -32,7 +32,7 @@ public class MultiChoice extends QuestionType
     }
     
     private volatile Object scoreKey = new Object();
-    private volatile int myScore = -1;
+    private volatile int myScore = 0;
 
     private Question makeQuestionActual(LinkedBlockingQueue<Integer> score, String desc, String[] choices, int correctIdx)
     {
@@ -43,7 +43,6 @@ public class MultiChoice extends QuestionType
 	//end message
 	Label endMessage = new Label();
 	Button nextBtn = new Button();
-	nextBtn.setText("Next");
 	//description
 	Label descLabel = new Label(desc);
         //choices
@@ -74,7 +73,6 @@ public class MultiChoice extends QuestionType
                 Toggle selected = choicesGroup.getSelectedToggle();
 		if(selected!=null)
 		{
-		    System.out.println(selected.getUserData().toString());
 		    String message;
 		    if(selected.getUserData().toString().equals(String.valueOf(correctIdx)))
 		    {
@@ -82,8 +80,9 @@ public class MultiChoice extends QuestionType
 			message = "Correct!";
 			synchronized(scoreKey)
 			{
+			    System.out.println("Set score to 1");
 			    myScore = 1;
-			    scoreKey.notify();
+			  //  scoreKey.notify();
 			}
 		    }
 		    else
@@ -92,8 +91,9 @@ public class MultiChoice extends QuestionType
 			message = "Wrong!";
 			synchronized(scoreKey)
 			{
+			    System.out.println("Set score to 0");
 			    myScore = 0;
-			    scoreKey.notify();
+			    //scoreKey.notify();
 			}
 		    }
                     Platform.runLater(() ->
@@ -104,27 +104,39 @@ public class MultiChoice extends QuestionType
 			    node.setDisable(true);
 			});
 			endMessage.setText(message);
-		        root.add(nextBtn, 0, 4);
+		        //root.add(nextBtn, 0, 4);
+			nextBtn.setDisable(false);
 		    });
+		}
+		else
+		{
+		    synchronized(scoreKey)
+		    {
+		        myScore = 0;
+		    }
 		}
 	    }
 	});
 
+
+	nextBtn.setText("Next");
+	nextBtn.setDisable(true);
 	nextBtn.setOnAction(new EventHandler<ActionEvent>()
 	{
 	    @Override
 	    public void handle(ActionEvent event)
 	    {
+	        System.out.println("Next button fired");
 		try
 		{
 		    synchronized(scoreKey)
 		    {
-		        if(myScore==-1)
+		        /*if(myScore==-1)
 			{
 			    scoreKey.wait();
-			}
+			}*/
 		        score.put(myScore);
-			myScore = -1;
+			//myScore = -1;
 		    }
 		}
 		catch(InterruptedException e)
@@ -133,6 +145,9 @@ public class MultiChoice extends QuestionType
 		}
 	    }
 	});
+
+        submitBtn.setUserData("SUBMIT");
+	nextBtn.setUserData("NEXT");
 	
 	//description
 	root.add(descLabel, 0,0);
@@ -142,6 +157,8 @@ public class MultiChoice extends QuestionType
 	root.add(submitBtn, 0,2);
 	//end message
         root.add(endMessage, 0, 3);
+	//next button
+	root.add(nextBtn, 0, 4);
         
 	return new Question(root);
     }

@@ -16,10 +16,15 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.ArrayList;
 
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+
 public class Question
 {
+    //This pane has been populated by the correct buttons etc already!
     protected GridPane root;
-    private ExecutorService executor = Executors.newFixedThreadPool(2);
+    private ExecutorService executor = Executors.newFixedThreadPool(1);
 
     public Question(GridPane root)
     {
@@ -41,20 +46,22 @@ public class Question
          
 
 	//List of jobs to start
-	List<Callable<Integer>> list = new ArrayList<>();
+	List<Callable<Result>> list = new ArrayList<>();
         //if we have a limited amount of time
 	if(time>0)
 	{
             list.add(() ->
 	    {
 	        Timeouts timeout = new Timeouts(time, root);
-	        return timeout.start();
+	        Integer fail = timeout.start();
+		return new Result("Timeout", fail);
 	    });
 	}
 	//wait for the user's result to appear
 	list.add(() ->
 	{
-	    return score.take();
+	    Integer userMark = score.take();
+	    return new Result("User", userMark);
 	});
          
 	//different executor running this
@@ -62,10 +69,55 @@ public class Question
 	//result the user pressed next() on
         return executor.submit(() ->
         {
-	    Integer result = e.invokeAny(list);
-	    e.shutdown();
+	    Integer mark=null;
+	    Result result = e.invokeAny(list);
+	    if(result.getName().equals("Timeout"))
+	    {
+		    System.out.println("timeout!");
+		    boolean submitted = false;
+                    ObservableList<Node> items = root.getChildren();
+                    Button submit=null;
+		    Button next=null;
+		    for (Node n : items)
+		    {
+		        Object data = n.getUserData();
+			if(data!=null)
+			{
+			    if(((String)data).equals("SUBMIT"))
+			    {
+			        System.out.println("Have submit");
+			        submit = (Button)n;
+			    }
+			    if(((String)data).equals("NEXT"))
+			    {
+			        System.out.println("Have next");
+			        next = (Button)n;
+			    }
+			}
+		    }
+		    if(submit!=null && next!=null)
+		    {
+		        System.out.println("Firing");
+		        submit.setDisable(false);
+			submit.fire();
+			next.setDisable(false);
+		        next.fire();
+			System.out.println("Fired");
+		        mark = score.take();
+		    }
+		    else
+		    {
+		        mark = 0;
+		    }
+	    }
+	    else
+	    {
+	        mark = (Integer)result.getResult();
+	        System.out.println("USER SUBMIT");
+	    }
+	    e.shutdownNow();
 	    executor.shutdown();
-	    return result;
+	    return mark;
 	});
     }
 }

@@ -51,9 +51,10 @@ public class DoctorWhoQuiz extends QuizPlugin
                 
 		try
 		{
-		    Future<Integer> q1Ans = q1.invoke(20, primaryStage, score);
+		    Future<Integer> q1Ans = q1.invoke(5, primaryStage, score);
 		    myScore += q1Ans.get();
-		    Future<Integer> q2Ans = q2.invoke(15, primaryStage, score);
+		    System.out.println("starting Q2");
+		    Future<Integer> q2Ans = q2.invoke(5, primaryStage, score);
 		    myScore += q2Ans.get();
 		}
 		catch(InterruptedException e)
