@@ -47,21 +47,27 @@ public class DoctorWhoQuiz extends QuizPlugin
 		QuestionType sa = super.get("ShortAnswer");
                 
 		Question q1 = mcp.makeQuestion(score, "What is my name?", new String[] { "Janek", "Tom" }, 0);
-		Question q2 = mcp.makeQuestion(score, "What is my last name?", new String[] { "Joyce", "Scott" }, 0);
+		Question q2 = mcp.makeQuestion(score, "What is my middle name?", new String[] { "Bob", "Karl" }, 1);
+		Question q3 = mcp.makeQuestion(score, "What is my last name?", new String[] { "Joyce", "Scott" }, 0);
                 
 		try
 		{
-		    Future<Integer> q1Ans = q1.invoke(5, primaryStage, score);
+		    Future<Integer> q1Ans = q1.invoke(20, primaryStage, score, false);
+		    q2.invoke(0, primaryStage, null, true);
 		    myScore += q1Ans.get();
-		    System.out.println("starting Q2");
-		    Future<Integer> q2Ans = q2.invoke(5, primaryStage, score);
+
+		    Future<Integer> q2Ans = q2.invoke(20, primaryStage, score, false);
+		    q3.invoke(0, primaryStage, null, true);
 		    myScore += q2Ans.get();
+		    
+		    Future<Integer> q3Ans = q3.invoke(30, primaryStage, score, false);
+		    myScore += q3Ans.get();
 		}
 		catch(InterruptedException e)
 		{
 		    System.out.println("Interrupted! unable to add to your score");
 		}
-		displayResult("Results", "Doctor who quiz result", "You scored " + myScore + " out of a maximum " + 2 + " points!");
+		displayResult("Results", "Doctor who quiz result", "You scored " + myScore + " out of a maximum " + 3 + " points!");
 		System.out.println("Done");
 		returnToMain(prevScene, primaryStage);
 	    }

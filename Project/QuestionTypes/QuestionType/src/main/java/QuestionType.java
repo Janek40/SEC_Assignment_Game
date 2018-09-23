@@ -20,6 +20,7 @@ public abstract class QuestionType
     //}
 
     public abstract Question makeQuestion(Object... args);
-    //public abstract void restartQuiz();
+    public abstract GridPane makePreview(String desc);
+    public abstract void restartQuiz();
     //public abstract void returnToQuizSelection();
 }

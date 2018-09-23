@@ -23,20 +23,25 @@ import javafx.scene.control.Button;
 public class Question
 {
     //This pane has been populated by the correct buttons etc already!
-    protected GridPane root;
+    protected GridPane regularRoot;
+    protected GridPane previewRoot;
     private ExecutorService executor = Executors.newFixedThreadPool(1);
-
-    public Question(GridPane root)
+    
+    public Question(GridPane regularRoot, GridPane previewRoot)
     {
-        this.root = root;
+        this.regularRoot = regularRoot;
+	this.previewRoot = previewRoot;
     }
 
-    public Future<Integer> invoke(int time, Stage primaryStage, LinkedBlockingQueue<Integer> score)
+
+    public Future<Integer> invoke(int time, Stage primaryStage, LinkedBlockingQueue<Integer> score, boolean showPreview)
     {
+        if(!showPreview)
+	{
 	//Show the question
 	Platform.runLater(() ->
 	{
-	    primaryStage.setScene(new Scene(root, 500, 500));
+	    primaryStage.setScene(new Scene(regularRoot, 500, 500));
 	    primaryStage.show();
 	});
 	//Start an executor service
@@ -52,7 +57,7 @@ public class Question
 	{
             list.add(() ->
 	    {
-	        Timeouts timeout = new Timeouts(time, root);
+	        Timeouts timeout = new Timeouts(time, regularRoot);
 	        Integer fail = timeout.start();
 		return new Result("Timeout", fail);
 	    });
@@ -75,7 +80,7 @@ public class Question
 	    {
 		    System.out.println("timeout!");
 		    boolean submitted = false;
-                    ObservableList<Node> items = root.getChildren();
+                    ObservableList<Node> items = regularRoot.getChildren();
                     Button submit=null;
 		    Button next=null;
 		    for (Node n : items)
@@ -119,5 +124,17 @@ public class Question
 	    executor.shutdown();
 	    return mark;
 	});
+	}
+	//just show preview
+	else
+	{
+	    Platform.runLater(() ->
+	    {
+	        Scene sc = primaryStage.getScene();
+		GridPane oldRoot = (GridPane)sc.getRoot();
+		oldRoot.add(previewRoot, 0, 6);
+	    });
+	    return null;
+	}
     }
 }
