@@ -8,23 +8,20 @@ public class Timeouts
     private GridPane root;
     private String labelText = "Time left: ";
     private Label label;
- //   private LinkedBlockingQueue<Integer> score;
 
-    public Timeouts(int numSeconds, GridPane root/*, LinkedBlockingQueue<Integer> score*/)
+    public Timeouts(int numSeconds, GridPane root)
     {
         this.numSeconds = numSeconds;    
 	this.root = root;
 	this.label = new Label();
 	this.label.setText(labelText);
-        
-	/*this.score = score;*/
     }
 
     public Integer start()
     {
         Platform.runLater(() ->
 	{
-	    root.add(label, 0, 5);
+	    root.add(label, 0, 6);
 	});
 	try
 	{
@@ -34,6 +31,7 @@ public class Timeouts
 		Thread.sleep(1000);
 	    }
 	 }
+	 //no worries
 	 catch(InterruptedException e)
 	 {
 	     System.out.println("AHHH LEMME SLEEP");
