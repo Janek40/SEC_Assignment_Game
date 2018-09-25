@@ -23,7 +23,6 @@ public class MultiChoice extends QuestionType
     @SuppressWarnings("unchecked")
     public Question makeQuestion(Object... args)
     {
-	//LinkedBlockingQueue<Integer> score = new LinkedBlockingQueue<Integer>();//(LinkedBlockingQueue<Integer>)args[0];
 	String desc = (String)args[0];
 	String[] choices = (String[])args[1];
 	int correct = ((Integer)args[args.length-1]).intValue();
@@ -88,22 +87,20 @@ public class MultiChoice extends QuestionType
 		    String message;
 		    if(selected.getUserData().toString().equals(String.valueOf(correctIdx)))
 		    {
-		        System.out.println("Correct!");
 			message = "Correct!";
 			synchronized(scoreKey)
 			{
-			    System.out.println("Set score to 1");
+			//    System.out.println("Set score to 1");
 			    myScore = 1;
 			    scoreKey.notify();
 			}
 		    }
 		    else
 		    {
-		        System.out.println("Wrong!");
 			message = "Wrong!";
 			synchronized(scoreKey)
 			{
-			    System.out.println("Set score to 0");
+			  //  System.out.println("Set score to 0");
 			    myScore = 0;
 			    scoreKey.notify();
 			}
@@ -138,7 +135,6 @@ public class MultiChoice extends QuestionType
 	    @Override
 	    public void handle(ActionEvent event)
 	    {
-	        System.out.println("Next button fired");
 		try
 		{
 		    synchronized(scoreKey)
@@ -148,12 +144,34 @@ public class MultiChoice extends QuestionType
 			    scoreKey.wait();
 			}
 		        score.put(myScore);
-			//myScore = -1;
+			myScore = -1;
 		    }
 		}
 		catch(InterruptedException e)
 		{
 		    System.out.println("Interrupted!");
+		}
+	    }
+	});
+
+	Button restartBtn = new Button();
+	restartBtn.setText("Exit Quiz");
+	restartBtn.setDisable(false);
+        restartBtn.setOnAction(new EventHandler<ActionEvent>()
+	{
+	    @Override
+	    public void handle(ActionEvent event)
+	    {
+	        try
+		{
+		    synchronized(scoreKey)
+	            {
+		        score.put(-1);
+	            }
+		}
+		catch(InterruptedException e)
+		{
+		    System.out.println("interrupted");
 		}
 	    }
 	});
@@ -171,6 +189,8 @@ public class MultiChoice extends QuestionType
         root.add(endMessage, 0, 3);
 	//next button
 	root.add(nextBtn, 0, 4);
+	//restart
+	root.add(restartBtn, 0, 5);
         
 	return root;
     }
