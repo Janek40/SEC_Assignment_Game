@@ -6,6 +6,7 @@ import javafx.stage.Stage;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ExecutionException;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -27,7 +28,7 @@ public class Question
     protected GridPane previewRoot;
     private LinkedBlockingQueue<Integer> score;
     private ExecutorService executor = Executors.newFixedThreadPool(1);
-    
+
     public Question(GridPane regularRoot, GridPane previewRoot, LinkedBlockingQueue<Integer> score)
     {
         this.regularRoot = regularRoot;
@@ -35,17 +36,97 @@ public class Question
 	this.score = score;
     }
 
-
-    public Future<Integer> invoke(int time, Stage primaryStage/*, LinkedBlockingQueue<Integer> score*/, boolean showPreview)
+    public void showPreview(Stage primaryStage)
     {
-        if(!showPreview)
+        Platform.runLater(() ->
 	{
-	//Show the question
+	    Scene sc = primaryStage.getScene();
+	    GridPane oldRoot = (GridPane)sc.getRoot();
+	    oldRoot.add(previewRoot, 0, 8);
+	});
+    }
+    
+    //Why not pass in the function? Compiler complains
+    private volatile SafeBoolean key;
+    
+    //Function starts the questioning 
+    //It takes in the time the user has before the question times out
+    //the stage to write the buttons/information to
+    //A list to keep track of whose turn it is (Which one should run or show a preview)
+    //a SafeBoolean ->basically a boolean in a wrapper so it can be set as volatile
+    //and finally the question number!
+    public Future<Integer> invoke(int time, Stage primaryStage, LinkedBlockingQueue<Integer> turn, SafeBoolean key, int qNum)
+    throws ClassNotFoundException
+    {
+        this.key = key;
+       	return executor.submit(() ->
+	{
+	    //if there are no turns present
+	    //means this is the very first question to be invoked
+	    if(turn.size()==0)
+	    {
+	        turn.put(qNum);    
+	    }
+	    //there are other previously invoked questions
+	    else
+	    {
+	        turn.put(qNum);
+                //while it is not that question's turn
+		while(turn.peek()!=qNum)
+	        {
+	            int k=0;
+		    //We need to find the second item in the list
+		    //This will need to show a preview
+		    //if it exists or has been invoked that is!
+	            for (Integer i : turn)
+		    {
+		        if(k==1)
+		        {
+		            //i'm the second one in the list!
+			    if(i==qNum)
+			    {
+				showPreview(primaryStage);
+			    }
+			    break;
+		        }
+		        k++;
+		    }
+		    //Wait for a question to be finished
+	            synchronized(this.key)
+	            {
+		        this.key.wait();
+	            }
+		    //exit!
+		    //When the question removes all turns this means
+		    //they pressed the exit button
+		    //Might as well use the variables for other things
+		    if(turn.size()==0)
+		    {
+		        executor.shutdown();
+			throw new ClassNotFoundException();
+			//return 0;
+		    }
+	        }
+	    }
+	    return invokeFull(time, primaryStage, turn, qNum);
+	});
+    }
+
+    private Integer invokeFull(int time, Stage primaryStage, LinkedBlockingQueue<Integer> turn, int qNum)
+    {
+   	//Show the question
 	Platform.runLater(() ->
 	{
 	    primaryStage.setScene(new Scene(regularRoot, 500, 500));
 	    primaryStage.show();
 	});
+	
+	//Let the preview know that we are ready
+	synchronized(this.key)
+	{
+	    this.key.notifyAll();
+	}
+
 	//Start an executor service
 	ExecutorService e 
 	   = new ThreadPoolExecutor(2, 2, 5000, TimeUnit.MILLISECONDS, 
@@ -71,20 +152,21 @@ public class Question
 	    return new Result("User", userMark);
 	});
          
-	//different executor running this
-	//waits for EITHER the timeout to occur, which returns 0, or the 
-	//result the user pressed next() on
-        return executor.submit(() ->
-        {
+	try
+	{
 	    Integer mark=null;
+	    //This gets the result of the first job to finish
+	    //The rest are stopped!
+	    //So if the user submits before the time is out the timeout is canceled
 	    Result result = e.invokeAny(list);
+	    //if the result was a timeout
 	    if(result.getName().equals("Timeout"))
 	    {
-		    System.out.println("timeout!");
-		    boolean submitted = false;
                     ObservableList<Node> items = regularRoot.getChildren();
                     Button submit=null;
 		    Button next=null;
+		    //find the submit and next buttons
+		    //we have to fire them somehow
 		    for (Node n : items)
 		    {
 		        Object data = n.getUserData();
@@ -92,24 +174,23 @@ public class Question
 			{
 			    if(((String)data).equals("SUBMIT"))
 			    {
-			        System.out.println("Have submit");
 			        submit = (Button)n;
 			    }
 			    if(((String)data).equals("NEXT"))
 			    {
-			        System.out.println("Have next");
 			        next = (Button)n;
 			    }
 			}
 		    }
 		    if(submit!=null && next!=null)
 		    {
-		        System.out.println("Firing");
+		        //make sure they are enabled!
 		        submit.setDisable(false);
 			submit.fire();
 			next.setDisable(false);
 		        next.fire();
-			System.out.println("Fired");
+			//They will check the answer and pass it into the score list
+			//get the result here:
 		        mark = score.take();
 		    }
 		    else
@@ -117,25 +198,41 @@ public class Question
 		        mark = 0;
 		    }
 	    }
+	    //if the user submits before a timeout
 	    else
 	    {
 	        mark = (Integer)result.getResult();
-	        System.out.println("USER SUBMIT");
 	    }
+	    //inform the other questions that we are finished!
+	    //They may now write on the screen
+	    synchronized(this.key)
+	    {
+	        //MEANS RESTART
+	        if(mark==-1)
+		{
+		    turn.clear();
+		}
+		//else this question's turn is over
+		else
+		{
+		    turn.remove(qNum);
+		}
+		this.key.notifyAll();
+	    }
+	    //close down this question's executors
+	    //otherwise they will still be open when we close the program...
 	    e.shutdownNow();
 	    executor.shutdown();
 	    return mark;
-	});
 	}
-	//just show preview
-	else
+	catch(InterruptedException ex)
 	{
-	    Platform.runLater(() ->
-	    {
-	        Scene sc = primaryStage.getScene();
-		GridPane oldRoot = (GridPane)sc.getRoot();
-		oldRoot.add(previewRoot, 0, 6);
-	    });
+	    System.out.println("Unable to complete operation");
+	    return null;
+	}
+	catch(ExecutionException ex)
+	{
+	    System.out.println("Unable to complete operation");
 	    return null;
 	}
     }
