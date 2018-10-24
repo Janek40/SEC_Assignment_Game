@@ -22,7 +22,8 @@ public abstract class QuizPlugin
 
     public QuizPlugin(String name)
     {
-        this.name = name;
+	GameLogic.turn.clear();
+	this.name = name;
     }
 
     public String getName()
@@ -30,12 +31,37 @@ public abstract class QuizPlugin
         return this.name;
     }
 
+    protected void showError(Exception e)
+    {
+        ErrorGUI err = new ErrorGUI();
+	err.showError(e.getMessage());
+    }
+    protected void returnToMain(Scene s, Stage pri)
+    {
+        Platform.runLater(() ->
+	{
+	    pri.setScene(s);
+	});
+    }
+    protected GridPane setQuizScene(String title, Stage primaryStage, int winX, int winY)
+    {
+        GridPane newRoot = new GridPane();
+	Platform.runLater(() ->
+	{
+	    primaryStage.hide();
+	    primaryStage.setTitle(title);
+	    primaryStage.setScene(new Scene(newRoot, winX, winY));
+	    primaryStage.show();
+	});
+	return newRoot;
+    }
+
     public abstract void runQuiz(Scene root, Stage primaryStage);
 
     @SuppressWarnings("unchecked")
     protected void loadPlugins() throws IOException, ClassNotFoundException
     {
-        List<String> places = new ArrayList<String>();
+	List<String> places = new ArrayList<String>();
 	places.add(System.getProperty("user.dir") + "/plugins/QuestionTypes/");
 	    List<String> contains = new ArrayList<String>();
 	    contains.add(".jar");
