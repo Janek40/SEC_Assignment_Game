@@ -1,2 +1,2 @@
-# SEC_Assignemnt_Game
+# SEC_Assignment_Game
 SEC assignment
