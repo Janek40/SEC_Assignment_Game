@@ -62,6 +62,37 @@ public abstract class QuizPlugin
 	}
     }
 
+    @SuppressWarnings("unchecked")
+    protected void loadPlugin(String pluginName) throws IOException, ClassNotFoundException
+    {
+        List<String> places = new ArrayList<String>();
+	places.add(System.getProperty("user.dir") + "/plugins/QuestionTypes/");
+	    List<String> contains = new ArrayList<String>();
+	    contains.add(".jar");
+        PluginFinder pf = new PluginFinder(places, contains);
+	pf.find();
+        
+	PluginLoader<QuestionType> loader = new PluginLoader<QuestionType>();
+        List<String> locations = pf.getLocations();
+	List<String> names = pf.removeExtension(4);
+	for(int i=0;i<locations.size();i++)
+	{
+	    try
+	    {
+	        QuestionType question = loader.loadPlugin(locations.get(i), names.get(i), QuestionType.class);
+	        if(question!=null)
+	        {
+	            types.put(question.getName(), question);
+	        }
+	    }
+	    catch(ClassNotFoundException e)
+	    {
+	        System.out.println("Unable to load a class");
+	    }
+	}
+
+    }
+
     protected void displayResult(String title, String header, String message)
     {
         Platform.runLater(() ->
