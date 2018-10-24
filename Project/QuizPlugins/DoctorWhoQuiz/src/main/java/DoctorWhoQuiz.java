@@ -18,8 +18,6 @@ public class DoctorWhoQuiz extends QuizPlugin
 {
     private final int WINDOW_X = 500;
     private final int WINDOW_Y = 500;
-    //private volatile Boolean key = false;
-    private volatile SafeBoolean key = new SafeBoolean(false);
 
     public DoctorWhoQuiz()
     {
@@ -32,40 +30,32 @@ public class DoctorWhoQuiz extends QuizPlugin
 	System.out.println("Doctor who Quiz running");
 	Thread t1 = new Thread(() ->
 	{
-	    GridPane newRoot = new GridPane();
-	    Platform.runLater(() ->
-	    {
-	        primaryStage.setTitle("Doctor who quiz");
-	        primaryStage.setScene(new Scene(newRoot, WINDOW_X, WINDOW_Y));
-	        primaryStage.show();
-	    });
+	    GridPane newRoot = super.setQuizScene("Doctor who quiz", primaryStage, WINDOW_X, WINDOW_Y);
 	    
 	    try
 	    {
 	        int myScore = 0;
-		/*
-		super.loadPlugins();
-	        QuestionType mcp = super.get("MultiChoice");
-		QuestionType sa = super.get("ShortAnswer");
-                */
-                QuestionType mcp = super.loadPlugin("MultiChoice");
+                
+		QuestionType mcp = super.loadPlugin("MultiChoice");
 		QuestionType sa = super.loadPlugin("ShortAnswer");
-
+                
+		Question q0 = sa.makeQuestion("What is?", "poop");
 		Question q1 = mcp.makeQuestion("What is my name?", new String[] { "Janek", "Tom" }, 0);
 		Question q2 = mcp.makeQuestion("What is my middle name?", new String[] { "Bob", "Karl" }, 1);
 		Question q3 = mcp.makeQuestion("What is my last name?", new String[] { "Joyce", "Scott" }, 0);
 		Question q4 = mcp.makeQuestion("What is 2+2", new String[] { "4", "5", "6" }, 0);
                 
-		LinkedBlockingQueue<Integer> turn = new LinkedBlockingQueue<Integer>();
 
 		try
 		{
-		    //time to complete, primary stage, list to keep track of turns, a key, the turn
-		    Future<Integer> q1Ans = q1.invoke(0, primaryStage, turn, key, 1);
-		    Future<Integer> q2Ans = q2.invoke(20, primaryStage, turn, key, 2);
-		    Future<Integer> q3Ans = q3.invoke(30, primaryStage, turn, key, 3);
-		    Future<Integer> q4Ans = q4.invoke(30, primaryStage, turn, key, 4);
+                    //timeout time, and the stage to write to
+		    Future<Integer> q0Ans = q0.invoke(0, primaryStage, 0);
+		    Future<Integer> q1Ans = q1.invoke(0, primaryStage, 1);
+		    Future<Integer> q2Ans = q2.invoke(20, primaryStage, 2);
+                    Future<Integer> q3Ans = q3.invoke(30, primaryStage, 3);
+		    Future<Integer> q4Ans = q4.invoke(30, primaryStage, 4);
 
+                    myScore += q0Ans.get();
 		    myScore += q1Ans.get();
 		    myScore += q2Ans.get();
 		    myScore += q3Ans.get();
@@ -75,40 +65,28 @@ public class DoctorWhoQuiz extends QuizPlugin
 		{
 		    System.out.println("Interrupted! unable to add to your score");
 		}
+		//title, Header, message
 		displayResult("Results", "Doctor who quiz result", "You scored " + myScore + " out of a maximum " + 4 + " points!");
-		System.out.println("Done");
-		returnToMain(prevScene, primaryStage);
 	    }
             catch(IOException e)
 	    {
-	        ErrorGUI err = new ErrorGUI();
-		err.showError(e.getMessage());
-		returnToMain(prevScene, primaryStage);
-		return;
+		showError(e);
 	    }
             catch(ClassNotFoundException e)
 	    {
-	        ErrorGUI err = new ErrorGUI();
-		err.showError(e.getMessage());
-		returnToMain(prevScene, primaryStage);
-		return;
+		showError(e);
 	    }
 	    catch(ExecutionException e)
 	    {
-                ErrorGUI err = new ErrorGUI();
-		err.showError(e.getMessage());
-		returnToMain(prevScene, primaryStage);
-		return;
+		showError(e);
 	    }
+	    catch(Exception e)
+	    {
+                showError(e);
+	    }
+	    //return to the main screen
+	    returnToMain(prevScene, primaryStage);
 	});
 	t1.start();
-    }
-
-    private void returnToMain(Scene prevScene, Stage primaryStage)
-    {
-        Platform.runLater(() ->
-        {
-            primaryStage.setScene(prevScene);
-        });
     }
 }
