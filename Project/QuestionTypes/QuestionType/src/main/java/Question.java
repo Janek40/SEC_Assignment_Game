@@ -59,7 +59,6 @@ public class Question
     public Future<Integer> invoke(int time, Stage primaryStage, int qNum)
     throws ClassNotFoundException, InterruptedException
     {
-	System.out.println("Adding question: " + qNum);
 	GameLogic.turn.put(qNum);
        	
 	return executor.submit(() ->
@@ -223,7 +222,6 @@ public class Question
 		//else this question's turn is over
 		else
 		{
-		    System.out.println("Removing question: " + qNum);
 		    GameLogic.turn.remove(qNum);
 		}
 		GameLogic.key.notifyAll();
