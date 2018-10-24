@@ -46,39 +46,33 @@ public class Question
 	});
     }
     
-    //Why not pass in the function? Compiler complains
-    private volatile SafeBoolean key;
-    
     //Function starts the questioning 
     //It takes in the time the user has before the question times out
     //the stage to write the buttons/information to
-    //A list to keep track of whose turn it is (Which one should run or show a preview)
-    //a SafeBoolean ->basically a boolean in a wrapper so it can be set as volatile
-    //and finally the question number!
-    public Future<Integer> invoke(int time, Stage primaryStage, LinkedBlockingQueue<Integer> turn, SafeBoolean key, int qNum)
-    throws ClassNotFoundException
+    public Future<Integer> invoke(int time, Stage primaryStage, int qNum)
+    throws ClassNotFoundException, InterruptedException
     {
-        this.key = key;
-       	return executor.submit(() ->
+	System.out.println("Adding question: " + qNum);
+	GameLogic.turn.put(qNum);
+       	
+	return executor.submit(() ->
 	{
-	    //if there are no turns present
-	    //means this is the very first question to be invoked
-	    if(turn.size()==0)
-	    {
-	        turn.put(qNum);    
-	    }
-	    //there are other previously invoked questions
-	    else
-	    {
-	        turn.put(qNum);
+	        //EXIT
+	        if(GameLogic.turn.peek()==-1)
+		{
+		    executor.shutdown();
+		    return 0;
+		}
+		
+		//GameLogic.turn.put(qNum);
                 //while it is not that question's turn
-		while(turn.peek()!=qNum)
+		while(GameLogic.turn.peek()!=qNum)
 	        {
 	            int k=0;
 		    //We need to find the second item in the list
 		    //This will need to show a preview
 		    //if it exists or has been invoked that is!
-	            for (Integer i : turn)
+	            for (Integer i : GameLogic.turn)
 		    {
 		        if(k==1)
 		        {
@@ -92,26 +86,31 @@ public class Question
 		        k++;
 		    }
 		    //Wait for a question to be finished
-	            synchronized(this.key)
+	            synchronized(GameLogic.key)
 	            {
-		        this.key.wait();
+		        GameLogic.key.wait();
 	            }
 		    //exit!
 		    //When the question removes all turns this means
 		    //they pressed the exit button
 		    //Might as well use the variables for other things
-		    if(turn.size()==0)
+		    if(GameLogic.turn.size()==0)
+		    {
+		        executor.shutdown();
+			return 0;
+		    }
+		    else if(GameLogic.turn.peek()==-1)
 		    {
 		        executor.shutdown();
 			return 0;
 		    }
 	        }
-	    }
-	    return invokeFull(time, primaryStage, turn, qNum);
+	    return invokeFull(time, primaryStage, qNum);
 	});
     }
 
-    private Integer invokeFull(int time, Stage primaryStage, LinkedBlockingQueue<Integer> turn, int qNum)
+
+    private Integer invokeFull(int time, Stage primaryStage, int qNum)
     {
    	//Show the question
 	Platform.runLater(() ->
@@ -121,9 +120,9 @@ public class Question
 	});
 	
 	//Let the preview know that we are ready
-	synchronized(this.key)
+	synchronized(GameLogic.key)
 	{
-	    this.key.notifyAll();
+	    GameLogic.key.notifyAll();
 	}
 
 	//Start an executor service
@@ -204,20 +203,22 @@ public class Question
 	    }
 	    //inform the other questions that we are finished!
 	    //They may now write on the screen
-	    synchronized(this.key)
+	    synchronized(GameLogic.key)
 	    {
-	        //MEANS RESTART
+	        //MEANS RESTART | EXIT
 	        if(mark==-1)
 		{
-		    turn.clear();
+		    GameLogic.turn.clear();
+		    GameLogic.turn.put(-1);
 		    mark = 0;
 		}
 		//else this question's turn is over
 		else
 		{
-		    turn.remove(qNum);
+		    System.out.println("Removing question: " + qNum);
+		    GameLogic.turn.remove(qNum);
 		}
-		this.key.notifyAll();
+		GameLogic.key.notifyAll();
 	    }
 	    //close down this question's executors
 	    //otherwise they will still be open when we close the program...
