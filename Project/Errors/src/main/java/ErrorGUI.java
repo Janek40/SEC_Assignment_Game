@@ -1,3 +1,10 @@
+/***************************************************************************
+* Author: Janek Joyce
+* Last Updated: 22/09/2018
+* Purpose: To show error messages
+*          This code is intended for the 2018 semester 1 SEC assignment
+***************************************************************************/
+
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

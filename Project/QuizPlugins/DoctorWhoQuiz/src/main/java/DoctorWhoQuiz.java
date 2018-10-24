@@ -1,3 +1,10 @@
+/***************************************************************************
+* Author: Janek Joyce
+* Last Updated: 24/10/2018
+* Purpose: To serve as an example quiz
+*          This code is intended for the 2018 semester 1 SEC assignment
+***************************************************************************/
+
 import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;

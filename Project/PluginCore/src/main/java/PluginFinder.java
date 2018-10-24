@@ -1,3 +1,10 @@
+/***************************************************************************
+* Author: Janek Joyce
+* Last Updated: 21/09/2018
+* Purpose: To show find plugins given a starting location and what the plugin names should contain
+*          This code is intended for the 2018 semester 1 SEC assignment
+***************************************************************************/
+
 import java.util.List;
 import java.util.LinkedList;
 import java.nio.file.Path;

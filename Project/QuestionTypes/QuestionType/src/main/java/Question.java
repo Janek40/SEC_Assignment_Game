@@ -1,3 +1,10 @@
+/***************************************************************************
+* Author: Janek Joyce
+* Last Updated: 24/10/2018
+* Purpose: To show current question, any previews, and handle timeouts
+*          This code is intended for the 2018 semester 1 SEC assignment
+***************************************************************************/
+
 import javafx.scene.layout.GridPane;
 import javafx.application.Platform;
 import javafx.scene.Scene;

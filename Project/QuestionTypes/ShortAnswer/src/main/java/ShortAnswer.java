@@ -1,3 +1,11 @@
+/***************************************************************************
+* Author: Janek Joyce
+* Last Updated: 24/10/2018
+* Purpose: To create a short answer question
+*          This code is intended for the 2018 semester 1 SEC assignment
+***************************************************************************/
+
+
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;

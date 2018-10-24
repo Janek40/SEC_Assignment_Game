@@ -1,3 +1,11 @@
+/***************************************************************************
+* Author: Janek Joyce
+* Last Updated: 24/10/2018
+* Purpose: To Allow questions to load plugins, show errors, and move back to the main menu easily
+*          This code is intended for the 2018 semester 1 SEC assignment
+***************************************************************************/
+
+
 import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;

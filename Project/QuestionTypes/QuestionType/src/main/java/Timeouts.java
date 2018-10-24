@@ -1,3 +1,10 @@
+/***************************************************************************
+* Author: Janek Joyce
+* Last Updated: 23/09/2018
+* Purpose: Used by a quiz question to show a timeout on the window.
+*          This code is intended for the 2018 semester 1 SEC assignment
+***************************************************************************/
+
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;

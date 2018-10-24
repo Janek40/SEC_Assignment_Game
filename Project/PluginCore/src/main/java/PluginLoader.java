@@ -1,3 +1,10 @@
+/***************************************************************************
+* Author: Janek Joyce
+* Last Updated: 21/09/2018
+* Purpose: Loads a class/plugin at runtime
+*          This code is intended for the 2018 semester 1 SEC assignment
+***************************************************************************/
+
 import java.nio.file.*;
 import java.util.*;
 import java.io.IOException;

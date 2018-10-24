@@ -1,3 +1,10 @@
+/***************************************************************************
+* Author: Janek Joyce
+* Last Updated: 21/09/2018
+* Purpose: Handles the main plugin/quiz window's list of selectable plugins.
+*          This code is intended for the 2018 semester 1 SEC assignment
+***************************************************************************/
+
 import java.io.IOException;
 import javafx.scene.layout.GridPane;
 import javafx.application.Platform;

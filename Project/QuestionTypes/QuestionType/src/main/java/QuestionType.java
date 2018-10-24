@@ -1,3 +1,10 @@
+/***************************************************************************
+* Author: Janek Joyce
+* Last Updated: 24/10/2018
+* Purpose: Abstract class used by question types, e.g multiple choice, short answer etc
+*          This code is intended for the 2018 semester 1 SEC assignment
+***************************************************************************/
+
 import javafx.scene.layout.GridPane;
 import java.util.concurrent.LinkedBlockingQueue;
 import javafx.scene.control.Label;
