@@ -9,7 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Toggle;
 import javafx.application.Platform;
 import javafx.scene.Node;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class MultiChoice extends QuestionType
 {
@@ -42,7 +41,6 @@ public class MultiChoice extends QuestionType
 	return root;
     }
     
-    private volatile Object scoreKey = new Object();
     private volatile int myScore = -1;
 
     private GridPane makeQuestionActual(String desc, String[] choices, int correctIdx)
@@ -88,22 +86,12 @@ public class MultiChoice extends QuestionType
 		    if(selected.getUserData().toString().equals(String.valueOf(correctIdx)))
 		    {
 			message = "Correct!";
-			synchronized(scoreKey)
-			{
-			//    System.out.println("Set score to 1");
-			    myScore = 1;
-			    scoreKey.notify();
-			}
+			myScore = 1;
 		    }
 		    else
 		    {
 			message = "Wrong!";
-			synchronized(scoreKey)
-			{
-			  //  System.out.println("Set score to 0");
-			    myScore = 0;
-			    scoreKey.notify();
-			}
+			myScore = 0;
 		    }
                     Platform.runLater(() ->
 		    {
@@ -113,16 +101,13 @@ public class MultiChoice extends QuestionType
 			    node.setDisable(true);
 			});
 			endMessage.setText(message);
-		        //root.add(nextBtn, 0, 4);
+			submitBtn.setDisable(true);
 			nextBtn.setDisable(false);
 		    });
 		}
 		else
 		{
-		    synchronized(scoreKey)
-		    {
-		        myScore = 0;
-		    }
+		    myScore = 0;
 		}
 	    }
 	});
@@ -137,15 +122,8 @@ public class MultiChoice extends QuestionType
 	    {
 		try
 		{
-		    synchronized(scoreKey)
-		    {
-		        if(myScore==-1)
-			{
-			    scoreKey.wait();
-			}
-		        score.put(myScore);
-			myScore = -1;
-		    }
+		    score.put(myScore);
+		    myScore = -1;
 		}
 		catch(InterruptedException e)
 		{
@@ -164,10 +142,7 @@ public class MultiChoice extends QuestionType
 	    {
 	        try
 		{
-		    synchronized(scoreKey)
-	            {
-		        score.put(-1);
-	            }
+		    score.put(-1);
 		}
 		catch(InterruptedException e)
 		{
