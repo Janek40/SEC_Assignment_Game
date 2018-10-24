@@ -103,8 +103,7 @@ public class Question
 		    if(turn.size()==0)
 		    {
 		        executor.shutdown();
-			throw new ClassNotFoundException();
-			//return 0;
+			return 0;
 		    }
 	        }
 	    }
@@ -211,6 +210,7 @@ public class Question
 	        if(mark==-1)
 		{
 		    turn.clear();
+		    mark = 0;
 		}
 		//else this question's turn is over
 		else
