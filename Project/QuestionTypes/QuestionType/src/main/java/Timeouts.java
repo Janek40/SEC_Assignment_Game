@@ -32,9 +32,9 @@ public class Timeouts
 	    }
 	 }
 	 //no worries
+	 //just means the user finished the question before the timeout! :D
 	 catch(InterruptedException e)
 	 {
-	     System.out.println("AHHH LEMME SLEEP");
 	 }
 	 return 0;
     }
