@@ -46,10 +46,19 @@ public class DoctorWhoQuiz extends QuizPlugin
 		QuestionType mcp = super.loadPlugin("MultiChoice");
 		QuestionType sa = super.loadPlugin("ShortAnswer");
                 
-		Question q0 = sa.makeQuestion("What is this unit?", "SEC");
-		Question q1 = mcp.makeQuestion("What is my name?", new String[] { "Janek", "Tom" }, 0);
-		Question q2 = mcp.makeQuestion("What is my middle name?", new String[] { "Bob", "Karl" }, 1);
-		Question q3 = mcp.makeQuestion("What is my last name?", new String[] { "Joyce", "Scott" }, 0);
+		Question q0 = sa.makeQuestion("Are the Daleks robots? Yes/No", "No");
+		Question q1 = mcp.makeQuestion(
+		    "Which story did the Doctor first regenerate?", 
+		    new String[] { "The War Games", "Logopolis", "The Tenth Planet", "Planet of the Spiders" }, 
+		    2);
+		Question q2 = mcp.makeQuestion(
+		    "Which Doctor met the cybermen ONCE?", 
+		    new String[] { "Second", "Third", "Fourth", "Fifth" }, 
+		    2);
+		Question q3 = mcp.makeQuestion(
+		    "Which is better? Original Doctor who, or NuWho?", 
+		    new String[] { "Original", "New" }, 
+		    0);
 		Question q4 = mcp.makeQuestion("What is 2+2", new String[] { "4", "5", "6" }, 0);
                 
 
@@ -73,7 +82,7 @@ public class DoctorWhoQuiz extends QuizPlugin
 		    System.out.println("Interrupted! unable to add to your score");
 		}
 		//title, Header, message
-		displayResult("Results", "Doctor who quiz result", "You scored " + myScore + " out of a maximum " + 4 + " points!");
+		displayResult("Results", "Doctor who quiz result", "You scored " + myScore + " out of a maximum " + 5 + " points!");
 	    }
 	    
             catch(IOException e)
