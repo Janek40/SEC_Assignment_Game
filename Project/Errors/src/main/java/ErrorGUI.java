@@ -16,7 +16,8 @@ public class ErrorGUI
     public ErrorGUI()
     {
     }
-
+    
+	//Shows the given string as an error to the user. 
     public void showError(String error)
     {
         System.out.println(error);

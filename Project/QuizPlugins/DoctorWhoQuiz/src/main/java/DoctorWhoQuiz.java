@@ -46,7 +46,7 @@ public class DoctorWhoQuiz extends QuizPlugin
 		QuestionType mcp = super.loadPlugin("MultiChoice");
 		QuestionType sa = super.loadPlugin("ShortAnswer");
                 
-		Question q0 = sa.makeQuestion("What is?", "poop");
+		Question q0 = sa.makeQuestion("What is this unit?", "SEC");
 		Question q1 = mcp.makeQuestion("What is my name?", new String[] { "Janek", "Tom" }, 0);
 		Question q2 = mcp.makeQuestion("What is my middle name?", new String[] { "Bob", "Karl" }, 1);
 		Question q3 = mcp.makeQuestion("What is my last name?", new String[] { "Joyce", "Scott" }, 0);
@@ -55,7 +55,7 @@ public class DoctorWhoQuiz extends QuizPlugin
 
 		try
 		{
-                    //timeout time, and the stage to write to
+                    //timeout time, the stage to write to and the question number
 		    Future<Integer> q0Ans = q0.invoke(0, primaryStage, 0);
 		    Future<Integer> q1Ans = q1.invoke(0, primaryStage, 1);
 		    Future<Integer> q2Ans = q2.invoke(20, primaryStage, 2);

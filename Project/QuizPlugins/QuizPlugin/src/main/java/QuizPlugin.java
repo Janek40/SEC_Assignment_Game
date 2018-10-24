@@ -33,17 +33,21 @@ public abstract class QuizPlugin
 	GameLogic.turn.clear();
 	this.name = name;
     }
-
+    
+	//Get the name of the plugin, eg DoctorWhoQuiz
     public String getName()
     {
         return this.name;
     }
-
+    
+	//shows any errors
     protected void showError(Exception e)
     {
         ErrorGUI err = new ErrorGUI();
 	err.showError(e.getMessage());
     }
+	
+	//Takes the user back to the main menu
     protected void returnToMain(Scene s, Stage pri)
     {
         Platform.runLater(() ->
@@ -51,6 +55,8 @@ public abstract class QuizPlugin
 	    pri.setScene(s);
 	});
     }
+	
+	//Sets the scene to the given values
     protected GridPane setQuizScene(String title, Stage primaryStage, int winX, int winY)
     {
         GridPane newRoot = new GridPane();
@@ -63,9 +69,11 @@ public abstract class QuizPlugin
 	});
 	return newRoot;
     }
-
+    
+	//Method needs to be implemented by the quiz
     public abstract void runQuiz(Scene root, Stage primaryStage);
-
+    
+	//Loads ALL plugins matching the correct criteria in the plugins folder
     @SuppressWarnings("unchecked")
     protected void loadPlugins() throws IOException, ClassNotFoundException
     {
@@ -95,7 +103,8 @@ public abstract class QuizPlugin
 	    }
 	}
     }
-
+    
+	//Loads a SINGLE plugin from the given directory
     @SuppressWarnings("unchecked")
     protected QuestionType loadPlugin(String pluginName) throws IOException, ClassNotFoundException
     {
@@ -139,7 +148,8 @@ public abstract class QuizPlugin
 	}
 	return loadedPlugin;
     }
-
+    
+	//Displays the end of quiz result to the user
     protected void displayResult(String title, String header, String message)
     {
         Platform.runLater(() ->
@@ -151,7 +161,7 @@ public abstract class QuizPlugin
 	});
     }
 
-
+    //get a certain quiz plugin from the list, after loadPlugins() was called
     protected QuestionType get(String key) throws ClassNotFoundException
     {
         QuestionType question = types.get(key);

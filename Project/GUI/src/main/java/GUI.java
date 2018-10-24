@@ -59,7 +59,7 @@ public class GUI extends Application
 	//This is run in another thread as it could be time consuming
 	ps.updatePluginsList();
 
-	//set up a button
+	//set up the continue button
 	Button btn = new Button();
 	btn.setText("Continue");
 	btn.setOnAction(new EventHandler<ActionEvent>()

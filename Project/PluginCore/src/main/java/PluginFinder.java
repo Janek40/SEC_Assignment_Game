@@ -62,7 +62,7 @@ public class PluginFinder
         mustContain
     */
     //I use this to find the plugins, given starting directory(s) search them for
-    //anything containing the worlds Plugin and .class - as it needs to be a .class file
+    //anything containing the worlds in mustContain are added to the locations list
     public void find() throws IOException
     { 
         int length = searchLocations.size();

@@ -37,12 +37,14 @@ public class PluginSetup
         this.root = root;
 	this.places = places;
 	this.contains = contains;
-
+        //Make the list contain the text 'loading...' so the user can see someone is happening
         List<String> loadingList = new ArrayList<String>(1);
 	loadingList.add("loading...");
 	updateList(loadingList);
     }
-
+    
+	//Given a list of places and what the plugin names contain
+	//find them, and add them to the user's list
     public void updatePluginsList()
     {
         Thread t1 = new Thread(() ->
@@ -65,7 +67,6 @@ public class PluginSetup
 	    {
 	       error.showError("There are no plugins in the given folder");
 	    }
-            //try{Thread.sleep(5000);}catch(InterruptedException e){}
         
             synchronized(key)
 	    {
@@ -103,7 +104,8 @@ public class PluginSetup
 	}
         return pf;
     }
-
+    
+	//Set the X and Y position this list is at
     public void setXY(int x, int y)
     {
         Platform.runLater(() ->
@@ -112,7 +114,8 @@ public class PluginSetup
 	    root.setRowIndex(list, y);
 	});
     }
-
+    
+	//set the list's prefered x and y dimensions
     public void setPrefWidthHeight(int xmin, int ymin)
     {
         Platform.runLater(() ->
@@ -121,12 +124,14 @@ public class PluginSetup
 	    list.setPrefWidth(xmin);
 	});
     }
-
+    
+	//converts a List<String> to ObservableList<String>
     private ObservableList<String> convertToItems(List<String> inItems)
     {
         return FXCollections.observableList(inItems);
     }
     
+	//Updates the list with this list of items
     public void updateList(List<String> inItems)
     {
         ObservableList<String> items = convertToItems(inItems);

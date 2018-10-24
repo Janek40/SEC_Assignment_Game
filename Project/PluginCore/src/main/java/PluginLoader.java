@@ -18,6 +18,9 @@ public class PluginLoader<E> extends ClassLoader
 {
     public PluginLoader(){}
     
+	//Loads an object from a .jar file
+	//Given the directory of the jar, the name of the object in the jar to construct, and the new object's parent class
+	//This code was adapted from MANY different sources, I did not simply copy and paste this.
     @SuppressWarnings("unchecked")
     public E loadPlugin(String loc, String name, Class<E> parentClass) throws ClassNotFoundException
     {

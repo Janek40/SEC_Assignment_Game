@@ -71,7 +71,6 @@ public class Question
 		    return 0;
 		}
 		
-		//GameLogic.turn.put(qNum);
                 //while it is not that question's turn
 		while(GameLogic.turn.peek()!=qNum)
 	        {
@@ -99,13 +98,14 @@ public class Question
 	            }
 		    //exit!
 		    //When the question removes all turns this means
-		    //they pressed the exit button
-		    //Might as well use the variables for other things
+		    //they pressed the exit button, or there are no more questions left
 		    if(GameLogic.turn.size()==0)
 		    {
 		        executor.shutdown();
 			return 0;
 		    }
+			//if a value of -1 is present, this stops any un-invoked questions from adding themselves here
+			//later
 		    else if(GameLogic.turn.peek()==-1)
 		    {
 		        executor.shutdown();
@@ -116,7 +116,7 @@ public class Question
 	});
     }
 
-
+    //When it is a certain question's turn we need to handle timeouts and the submit/next buttons
     private Integer invokeFull(int time, Stage primaryStage, int qNum)
     {
    	//Show the question
@@ -133,6 +133,7 @@ public class Question
 	}
 
 	//Start an executor service
+	//one thread will be a timeout, the other will be waiting for the question result
 	ExecutorService e 
 	   = new ThreadPoolExecutor(2, 2, 5000, TimeUnit.MILLISECONDS, 
              new ArrayBlockingQueue<Runnable>(10));
