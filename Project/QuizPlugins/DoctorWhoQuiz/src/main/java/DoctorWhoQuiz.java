@@ -43,10 +43,14 @@ public class DoctorWhoQuiz extends QuizPlugin
 	    try
 	    {
 	        int myScore = 0;
+		/*
 		super.loadPlugins();
 	        QuestionType mcp = super.get("MultiChoice");
 		QuestionType sa = super.get("ShortAnswer");
-                
+                */
+                QuestionType mcp = super.loadPlugin("MultiChoice");
+		QuestionType sa = super.loadPlugin("ShortAnswer");
+
 		Question q1 = mcp.makeQuestion("What is my name?", new String[] { "Janek", "Tom" }, 0);
 		Question q2 = mcp.makeQuestion("What is my middle name?", new String[] { "Bob", "Karl" }, 1);
 		Question q3 = mcp.makeQuestion("What is my last name?", new String[] { "Joyce", "Scott" }, 0);
