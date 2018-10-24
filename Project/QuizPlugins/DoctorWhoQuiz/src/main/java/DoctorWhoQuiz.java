@@ -68,11 +68,13 @@ public class DoctorWhoQuiz extends QuizPlugin
 		//title, Header, message
 		displayResult("Results", "Doctor who quiz result", "You scored " + myScore + " out of a maximum " + 4 + " points!");
 	    }
+	    
             catch(IOException e)
 	    {
 		showError(e);
 	    }
-            catch(ClassNotFoundException e)
+            
+	    catch(ClassNotFoundException e)
 	    {
 		showError(e);
 	    }

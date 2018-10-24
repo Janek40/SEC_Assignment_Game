@@ -72,6 +72,7 @@ public class MultiChoice extends QuestionType
 	}
         
         
+        submitBtn.setUserData("SUBMIT");
 	submitBtn.setText("Submit");
 	submitBtn.setDisable(true);
 	submitBtn.setOnAction(new EventHandler<ActionEvent>()
@@ -93,17 +94,14 @@ public class MultiChoice extends QuestionType
 			message = "Wrong!";
 			myScore = 0;
 		    }
-                    Platform.runLater(() ->
+		    choicesGroup.getToggles().forEach(toggle ->
 		    {
-		        choicesGroup.getToggles().forEach(toggle ->
-			{
-			    Node node = (Node)toggle;
-			    node.setDisable(true);
-			});
-			endMessage.setText(message);
-			submitBtn.setDisable(true);
-			nextBtn.setDisable(false);
+		        Node node = (Node)toggle;
+		        node.setDisable(true);
 		    });
+		    endMessage.setText(message);
+		    submitBtn.setDisable(true);
+		    nextBtn.setDisable(false);
 		}
 		else
 		{
@@ -113,6 +111,7 @@ public class MultiChoice extends QuestionType
 	});
 
 
+	nextBtn.setUserData("NEXT");
 	nextBtn.setText("Next");
 	nextBtn.setDisable(true);
 	nextBtn.setOnAction(new EventHandler<ActionEvent>()
@@ -151,8 +150,6 @@ public class MultiChoice extends QuestionType
 	    }
 	});
 
-        submitBtn.setUserData("SUBMIT");
-	nextBtn.setUserData("NEXT");
 	
 	//description
 	root.add(descLabel, 0,0);
