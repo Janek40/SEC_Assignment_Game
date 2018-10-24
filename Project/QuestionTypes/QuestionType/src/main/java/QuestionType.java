@@ -24,6 +24,4 @@ public abstract class QuestionType
 
     public abstract Question makeQuestion(Object... args);
     protected abstract GridPane makePreview(String desc);
- //   public abstract void restartQuiz();
-    //public abstract void returnToQuizSelection();
 }
