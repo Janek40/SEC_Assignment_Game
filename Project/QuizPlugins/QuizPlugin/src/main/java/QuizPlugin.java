@@ -63,34 +63,47 @@ public abstract class QuizPlugin
     }
 
     @SuppressWarnings("unchecked")
-    protected void loadPlugin(String pluginName) throws IOException, ClassNotFoundException
+    protected QuestionType loadPlugin(String pluginName) throws IOException, ClassNotFoundException
     {
-        List<String> places = new ArrayList<String>();
+        QuestionType loadedPlugin = null;
+
+	List<String> places = new ArrayList<String>();
 	places.add(System.getProperty("user.dir") + "/plugins/QuestionTypes/");
 	    List<String> contains = new ArrayList<String>();
 	    contains.add(".jar");
+	    contains.add(pluginName);
         PluginFinder pf = new PluginFinder(places, contains);
 	pf.find();
         
 	PluginLoader<QuestionType> loader = new PluginLoader<QuestionType>();
         List<String> locations = pf.getLocations();
 	List<String> names = pf.removeExtension(4);
-	for(int i=0;i<locations.size();i++)
+
+	//there may be multiple plugins with a similar part of the name
+	int pluginIndex = 0;
+	if(names.size()>1)
 	{
-	    try
+	    for(int i=0;i<names.size();i++)
 	    {
-	        QuestionType question = loader.loadPlugin(locations.get(i), names.get(i), QuestionType.class);
-	        if(question!=null)
-	        {
-	            types.put(question.getName(), question);
-	        }
-	    }
-	    catch(ClassNotFoundException e)
-	    {
-	        System.out.println("Unable to load a class");
+	        if(pluginName.equals(names.get(i)))
+		{
+		    pluginIndex = i;
+		}
 	    }
 	}
-
+	try
+	{
+ 	    loadedPlugin = loader.loadPlugin(locations.get(pluginIndex), names.get(pluginIndex), QuestionType.class);
+	    if(loadedPlugin==null)
+	    {
+	        throw new ClassNotFoundException("Unable to load one of your plugins");
+	    }
+	}
+	catch(ClassNotFoundException e)
+	{
+	    throw new ClassNotFoundException("Unable to load one of your plugins");
+	}
+	return loadedPlugin;
     }
 
     protected void displayResult(String title, String header, String message)
