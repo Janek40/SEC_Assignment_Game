@@ -1,9 +1,0 @@
-jar {
-    manifest {
-        attributes 'Plugin-Class': 'MultiplyPlugin'
-    }
-}
-
-dependencies {
-    compile project(':core')
-}

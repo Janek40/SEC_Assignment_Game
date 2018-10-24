@@ -1,9 +1,0 @@
-jar {
-    manifest {
-        attributes 'Plugin-Class': 'AddPlugin'
-    }
-}
-
-dependencies {
-    compile project(':core')
-}
