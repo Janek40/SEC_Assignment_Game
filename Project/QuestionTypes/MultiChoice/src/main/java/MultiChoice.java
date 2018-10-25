@@ -1,6 +1,6 @@
 /***************************************************************************
 * Author: Janek Joyce
-* Last Updated: 24/10/2018
+* Last Updated: 25/10/2018
 * Purpose: Work as a multiple choice question
 *          This code is intended for the 2018 semester 1 SEC assignment
 ***************************************************************************/
@@ -35,7 +35,7 @@ public class MultiChoice extends QuestionType
                  
 	GridPane regularRoot = makeQuestionActual(desc, choices, correct);
 	GridPane previewRoot = makePreview(desc);
-	return new Question(regularRoot, previewRoot, super.getScore());
+	return new Question(regularRoot, previewRoot);
     }
     
     @Override
@@ -128,7 +128,7 @@ public class MultiChoice extends QuestionType
 	    {
 		try
 		{
-		    score.put(myScore);
+		    GameLogic.score.put(myScore);
 		    myScore = -1;
 		}
 		catch(InterruptedException e)
@@ -148,7 +148,8 @@ public class MultiChoice extends QuestionType
 	    {
 	        try
 		{
-		    score.put(-1);
+		    GameLogic.score.put(0);
+		    GameLogic.endGame.put(1);
 		}
 		catch(InterruptedException e)
 		{

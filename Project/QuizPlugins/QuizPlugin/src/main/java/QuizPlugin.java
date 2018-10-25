@@ -31,6 +31,7 @@ public abstract class QuizPlugin
     public QuizPlugin(String name)
     {
 	GameLogic.turn.clear();
+	GameLogic.endGame.clear();
 	this.name = name;
     }
     

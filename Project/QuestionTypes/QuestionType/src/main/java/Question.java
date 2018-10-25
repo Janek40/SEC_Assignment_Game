@@ -1,6 +1,6 @@
 /***************************************************************************
 * Author: Janek Joyce
-* Last Updated: 24/10/2018
+* Last Updated: 25/10/2018
 * Purpose: To show current question, any previews, and handle timeouts
 *          This code is intended for the 2018 semester 1 SEC assignment
 ***************************************************************************/
@@ -33,14 +33,12 @@ public class Question
     //This pane has been populated by the correct buttons etc already!
     protected GridPane regularRoot;
     protected GridPane previewRoot;
-    private LinkedBlockingQueue<Integer> score;
     private ExecutorService executor = Executors.newFixedThreadPool(1);
 
-    public Question(GridPane regularRoot, GridPane previewRoot, LinkedBlockingQueue<Integer> score)
+    public Question(GridPane regularRoot, GridPane previewRoot)
     {
         this.regularRoot = regularRoot;
 	this.previewRoot = previewRoot;
-	this.score = score;
     }
 
     public void showPreview(Stage primaryStage)
@@ -64,7 +62,7 @@ public class Question
 	return executor.submit(() ->
 	{
 	        //EXIT
-	        if(GameLogic.turn.peek()==-1)
+		if(GameLogic.endGame.peek()!=null)
 		{
 		    executor.shutdown();
 		    return 0;
@@ -98,14 +96,7 @@ public class Question
 		    //exit!
 		    //When the question removes all turns this means
 		    //they pressed the exit button, or there are no more questions left
-		    if(GameLogic.turn.size()==0)
-		    {
-		        executor.shutdown();
-			return 0;
-		    }
-			//if a value of -1 is present, this stops any un-invoked questions from adding themselves here
-			//later
-		    else if(GameLogic.turn.peek()==-1)
+		    if(GameLogic.endGame.peek()!=null)
 		    {
 		        executor.shutdown();
 			return 0;
@@ -153,7 +144,7 @@ public class Question
 	//wait for the user's result to appear
 	list.add(() ->
 	{
-	    Integer userMark = score.take();
+	    Integer userMark = GameLogic.score.take();
 	    return new Result("User", userMark);
 	});
          
@@ -196,7 +187,7 @@ public class Question
 		        next.fire();
 			//They will check the answer and pass it into the score list
 			//get the result here:
-		        mark = score.take();
+		        mark = GameLogic.score.take();
 		    }
 		    else
 		    {
@@ -213,11 +204,10 @@ public class Question
 	    synchronized(GameLogic.key)
 	    {
 	        //MEANS RESTART | EXIT
-	        if(mark==-1)
+		if(GameLogic.endGame.peek()!=null)
 		{
+		    //cleanup!
 		    GameLogic.turn.clear();
-		    GameLogic.turn.put(-1);
-		    mark = 0;
 		}
 		//else this question's turn is over
 		else

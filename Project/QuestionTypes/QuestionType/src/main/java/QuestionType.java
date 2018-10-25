@@ -12,7 +12,7 @@ import javafx.scene.control.Label;
 public abstract class QuestionType
 {
     private String name;
-    public LinkedBlockingQueue<Integer> score = new LinkedBlockingQueue<Integer>();
+   // public LinkedBlockingQueue<Integer> score = new LinkedBlockingQueue<Integer>();
 
     public QuestionType(String inName)
     {
@@ -24,10 +24,10 @@ public abstract class QuestionType
         return this.name;
     }
 
-    public LinkedBlockingQueue<Integer> getScore()
+    /*public LinkedBlockingQueue<Integer> getScore()
     {
         return score;
-    }
+    }*/
 
     public abstract Question makeQuestion(Object... args);
     protected abstract GridPane makePreview(String desc);

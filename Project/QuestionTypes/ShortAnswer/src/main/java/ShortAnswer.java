@@ -1,6 +1,6 @@
 /***************************************************************************
 * Author: Janek Joyce
-* Last Updated: 24/10/2018
+* Last Updated: 25/10/2018
 * Purpose: To create a short answer question
 *          This code is intended for the 2018 semester 1 SEC assignment
 ***************************************************************************/
@@ -36,7 +36,7 @@ public class ShortAnswer extends QuestionType
 
 	GridPane regularRoot = makeQuestionActual(desc, correct);
 	GridPane previewRoot = makePreview(desc);
-	return new Question(regularRoot, previewRoot, super.getScore());
+	return new Question(regularRoot, previewRoot/*, super.getScore()*/);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class ShortAnswer extends QuestionType
 	    {
 	        try
 		{
-	            score.put(myScore);
+	            GameLogic.score.put(myScore);
 		}
 		catch(InterruptedException e)
 		{
@@ -120,7 +120,8 @@ public class ShortAnswer extends QuestionType
 	    {
 	        try
 		{
-	            score.put(-1);   
+		    GameLogic.score.put(0);
+		    GameLogic.endGame.put(1);
 		}
 		catch(InterruptedException e)
 		{

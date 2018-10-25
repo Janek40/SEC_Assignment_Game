@@ -45,12 +45,13 @@ public class DoctorWhoQuiz extends QuizPlugin
                 
 		QuestionType mcp = super.loadPlugin("MultiChoice");
 		QuestionType sa = super.loadPlugin("ShortAnswer");
-                
+
 		Question q0 = sa.makeQuestion("Are the Daleks robots? Yes/No", "No");
 		Question q1 = mcp.makeQuestion(
 		    "Which story did the Doctor first regenerate?", 
 		    new String[] { "The War Games", "Logopolis", "The Tenth Planet", "Planet of the Spiders" }, 
 		    2);
+		
 		Question q2 = mcp.makeQuestion(
 		    "Which Doctor met the cybermen ONCE?", 
 		    new String[] { "Second", "Third", "Fourth", "Fifth" }, 
@@ -89,7 +90,6 @@ public class DoctorWhoQuiz extends QuizPlugin
 	    {
 		showError(e);
 	    }
-            
 	    catch(ClassNotFoundException e)
 	    {
 		showError(e);
@@ -100,7 +100,7 @@ public class DoctorWhoQuiz extends QuizPlugin
 	    }
 	    catch(Exception e)
 	    {
-                showError(e);
+		showError(e);
 	    }
 	    //return to the main screen
 	    returnToMain(prevScene, primaryStage);
